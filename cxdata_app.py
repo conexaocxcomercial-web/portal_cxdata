@@ -1,7 +1,7 @@
 """
 CX Data - Portal de Dashboards
 ============================================
-Versão Final: Navegação Robusta (Refresh de Página)
+Versão Final 2.0: Forçando navegação moderna (ui.navigate.to)
 """
 
 from nicegui import ui, app
@@ -19,10 +19,10 @@ import os
 
 DATABASE_URL = os.getenv('DATABASE_URL')
 
-# Fallback para evitar erro se a variável não existir localmente
+# Fallback de segurança
 if not DATABASE_URL:
-    print("AVISO: DATABASE_URL não encontrada. O app vai quebrar se tentar conectar.")
-    DATABASE_URL = "sqlite:///exemplo.db" # Apenas para o python não fechar na hora
+    print("AVISO: DATABASE_URL não encontrada.")
+    DATABASE_URL = "sqlite:///exemplo.db" 
 
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
@@ -32,7 +32,7 @@ SessionLocal = sessionmaker(bind=engine)
 Base = declarative_base()
 
 # ============================================================================
-# 2. MODELOS (TABELAS)
+# 2. MODELOS
 # ============================================================================
 
 class Cliente(Base):
@@ -69,7 +69,7 @@ class DashboardPermissao(Base):
     dashboard = relationship('Dashboard', back_populates='permissoes')
 
 # ============================================================================
-# 3. LÓGICA (BACKEND)
+# 3. LÓGICA
 # ============================================================================
 
 def hash_password(password: str) -> str:
@@ -99,7 +99,7 @@ def obter_dashboards_autorizados(cliente_id: int, perfil: str) -> List[Dashboard
 
 class AppState:
     def __init__(self):
-        self.user_email: Optional[str] = None # Guardamos apenas o email na sessão para serializar
+        self.user_email: Optional[str] = None
     
     def login(self, user: User):
         self.user_email = user.email
@@ -124,9 +124,8 @@ def page_login():
     """Tela de Login"""
     state = app.storage.user.get('state', AppState())
     
-    # Se já estiver logado, manda pra home
     if state.user_email:
-        ui.open('/')
+        ui.navigate.to('/') # <--- Mudança aqui (mais moderno)
         return
 
     with ui.column().classes('w-full h-screen items-center justify-center bg-gray-100'):
@@ -141,12 +140,9 @@ def page_login():
             def try_login():
                 user = autenticar_usuario(email.value.strip(), senha.value)
                 if user:
-                    # 1. Salva na sessão
                     state.login(user) 
-                    app.storage.user['state'] = state # Força persistência
-                    
-                    # 2. Recarrega para a página principal
-                    ui.open('/')
+                    app.storage.user['state'] = state
+                    ui.navigate.to('/') # <--- Mudança aqui
                 else:
                     erro.text = 'Dados incorretos'
                     erro.classes(remove='hidden')
@@ -159,20 +155,19 @@ def page_home():
     """Tela Principal"""
     state = app.storage.user.get('state', AppState())
     
-    # 1. Verifica se tem usuário na sessão
+    # 1. Verifica sessão
     if not state or not state.user_email:
-        ui.open('/login')
+        ui.navigate.to('/login') # <--- Mudança aqui
         return
 
-    # 2. Carrega dados frescos do banco
+    # 2. Carrega dados
     user = state.get_user_completo()
     if not user:
-        # Se o usuário foi deletado do banco mas ta na sessão
         state.logout()
-        ui.open('/login')
+        ui.navigate.to('/login') # <--- Mudança aqui
         return
 
-    # Carrega dashboards e cliente
+    # Busca dados no banco
     db = SessionLocal()
     cliente = db.query(Cliente).filter(Cliente.id == user.cliente_id).first()
     dashboards = obter_dashboards_autorizados(user.cliente_id, user.perfil)
@@ -189,7 +184,7 @@ def page_home():
                 def logout_action():
                     state.logout()
                     app.storage.user['state'] = state
-                    ui.open('/login')
+                    ui.navigate.to('/login') # <--- Mudança aqui
                 ui.button(icon='logout', on_click=logout_action).props('flat round color=white')
 
     # Corpo
@@ -204,7 +199,7 @@ def page_home():
                     colors = {'financeiro': 'green', 'rh': 'blue', 'comercial': 'orange', 'operacional': 'purple'}
                     c = colors.get(dash.tipo.lower(), 'gray')
                     
-                    with ui.card().classes('cursor-pointer hover:shadow-lg transition').on('click', lambda d=dash: ui.open(f'/dashboard/{d.id}')):
+                    with ui.card().classes('cursor-pointer hover:shadow-lg transition').on('click', lambda d=dash: ui.navigate.to(f'/dashboard/{d.id}')):
                         with ui.card_section().classes(f'bg-{c}-100 p-6 flex justify-center'):
                             ui.icon('analytics', size='3rem').classes(f'text-{c}-600')
                         with ui.card_section().classes('p-4'):
@@ -213,16 +208,14 @@ def page_home():
         else:
             with ui.column().classes('w-full items-center justify-center py-12'):
                 ui.icon('folder_off', size='4rem').classes('text-gray-300 mb-4')
-                ui.label('Nenhum dashboard encontrado para seu perfil.').classes('text-gray-400 text-lg')
-                if user.perfil == 'admin':
-                    ui.label('(Como Admin, você precisa cadastrar dashboards no banco)').classes('text-sm text-gray-400')
+                ui.label('Nenhum dashboard encontrado.').classes('text-gray-400 text-lg')
 
 @ui.page('/dashboard/{dash_id}')
 def page_dashboard(dash_id: int):
-    """Tela de Visualização do Dashboard"""
+    """Tela de Dashboard"""
     state = app.storage.user.get('state', AppState())
     if not state or not state.user_email:
-        ui.open('/login'); return
+        ui.navigate.to('/login'); return
 
     db = SessionLocal()
     dash = db.query(Dashboard).filter(Dashboard.id == dash_id).first()
@@ -232,9 +225,9 @@ def page_dashboard(dash_id: int):
         ui.label('Dashboard não encontrado'); return
 
     with ui.column().classes('w-full h-screen p-0 m-0'):
-        # Barra superior simples
+        # Barra superior
         with ui.row().classes('w-full bg-blue-600 text-white p-2 items-center shadow-md'):
-            ui.button(icon='arrow_back', on_click=lambda: ui.open('/')).props('flat round color=white')
+            ui.button(icon='arrow_back', on_click=lambda: ui.navigate.to('/')).props('flat round color=white')
             ui.label(dash.nome).classes('font-bold ml-2')
         
         # Iframe
@@ -253,6 +246,6 @@ if __name__ in {'__main__', '__mp_main__'}:
         favicon='📊',
         host='0.0.0.0',
         port=port,
-        storage_secret='cx_key_9988', # Obrigatório
+        storage_secret='cx_key_9988',
         reload=False
     )
