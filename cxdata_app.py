@@ -1,7 +1,7 @@
 """
-CX Data - Portal de Dashboards Multi-Tenant
+CX Data - Portal de Dashboards
 ============================================
-Correção Final: Arquitetura de Container (Resolve erro 500 'ui.clear')
+Versão Final: Navegação Robusta (Refresh de Página)
 """
 
 from nicegui import ui, app
@@ -14,13 +14,15 @@ from typing import Optional, List
 import os
 
 # ============================================================================
-# CONFIGURAÇÃO DO BANCO DE DADOS
+# 1. BANCO DE DADOS
 # ============================================================================
 
-DATABASE_URL = os.getenv(
-    'DATABASE_URL',
-    'postgresql://postgres:SENHA@db.supabase.co:5432/postgres' 
-)
+DATABASE_URL = os.getenv('DATABASE_URL')
+
+# Fallback para evitar erro se a variável não existir localmente
+if not DATABASE_URL:
+    print("AVISO: DATABASE_URL não encontrada. O app vai quebrar se tentar conectar.")
+    DATABASE_URL = "sqlite:///exemplo.db" # Apenas para o python não fechar na hora
 
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
@@ -29,9 +31,8 @@ engine = create_engine(DATABASE_URL, echo=False, pool_pre_ping=True)
 SessionLocal = sessionmaker(bind=engine)
 Base = declarative_base()
 
-
 # ============================================================================
-# MODELOS DO BANCO DE DADOS
+# 2. MODELOS (TABELAS)
 # ============================================================================
 
 class Cliente(Base):
@@ -67,9 +68,8 @@ class DashboardPermissao(Base):
     perfil = Column(String(50), nullable=False)
     dashboard = relationship('Dashboard', back_populates='permissoes')
 
-
 # ============================================================================
-# LÓGICA DE NEGÓCIO
+# 3. LÓGICA (BACKEND)
 # ============================================================================
 
 def hash_password(password: str) -> str:
@@ -83,22 +83,6 @@ def autenticar_usuario(email: str, password: str) -> Optional[User]:
     finally:
         db.close()
 
-def criar_novo_usuario_db(email, senha, perfil, cliente_id):
-    db = SessionLocal()
-    try:
-        novo_usuario = User(email=email, password_hash=hash_password(senha), perfil=perfil, cliente_id=cliente_id)
-        db.add(novo_usuario)
-        db.commit()
-        return True, "Usuário criado com sucesso!"
-    except IntegrityError:
-        db.rollback()
-        return False, "Erro: E-mail já cadastrado."
-    except Exception as e:
-        db.rollback()
-        return False, f"Erro: {str(e)}"
-    finally:
-        db.close()
-
 def obter_dashboards_autorizados(cliente_id: int, perfil: str) -> List[Dashboard]:
     db = SessionLocal()
     try:
@@ -109,161 +93,166 @@ def obter_dashboards_autorizados(cliente_id: int, perfil: str) -> List[Dashboard
     finally:
         db.close()
 
-
 # ============================================================================
-# ESTADO E NAVEGAÇÃO
+# 4. ESTADO DO USUÁRIO
 # ============================================================================
 
 class AppState:
     def __init__(self):
-        self.user: Optional[User] = None
-        self.cliente: Optional[Cliente] = None
-        self.perfil: Optional[str] = None
-        self.dashboards_autorizados: List[Dashboard] = []
+        self.user_email: Optional[str] = None # Guardamos apenas o email na sessão para serializar
     
-    def fazer_login(self, user: User):
-        self.user = user
-        self.perfil = user.perfil
+    def login(self, user: User):
+        self.user_email = user.email
+    
+    def logout(self):
+        self.user_email = None
+
+    def get_user_completo(self) -> Optional[User]:
+        if not self.user_email: return None
         db = SessionLocal()
         try:
-            self.cliente = db.query(Cliente).filter(Cliente.id == user.cliente_id).first()
-            self.dashboards_autorizados = obter_dashboards_autorizados(user.cliente_id, user.perfil)
+            return db.query(User).filter(User.email == self.user_email).first()
         finally:
             db.close()
-    
-    def fazer_logout(self):
-        self.user = None
-        self.cliente = None
-        self.perfil = None
-        self.dashboards_autorizados = []
-    
-    def esta_autenticado(self) -> bool:
-        return self.user is not None
-
-def abrir_modal_criar_usuario(state: AppState):
-    with ui.dialog() as dialog, ui.card().classes('w-96'):
-        ui.label(f'Novo Usuário - {state.cliente.nome}').classes('text-xl font-bold mb-4')
-        email = ui.input('E-mail').classes('w-full')
-        senha = ui.input('Senha', password=True, password_toggle_button=True).classes('w-full')
-        perfil = ui.select(['admin', 'gestor', 'operacional', 'rh', 'financeiro'], label='Perfil', value='operacional').classes('w-full')
-        status = ui.label('').classes('text-sm mt-2')
-
-        def salvar():
-            if not email.value or not senha.value:
-                status.text = 'Preencha tudo.'; status.classes('text-red-500'); return
-            ok, msg = criar_novo_usuario_db(email.value, senha.value, perfil.value, state.user.cliente_id)
-            status.text = msg
-            status.classes('text-green-600' if ok else 'text-red-600')
-            if ok: ui.timer(1.5, dialog.close)
-
-        with ui.row().classes('w-full justify-end mt-4'):
-            ui.button('Cancelar', on_click=dialog.close).props('flat')
-            ui.button('Salvar', on_click=salvar).classes('bg-blue-600 text-white')
-    dialog.open()
-
 
 # ============================================================================
-# TELAS (AGORA RECEBEM O CONTAINER "CONTENT")
+# 5. TELAS (FRONTEND)
 # ============================================================================
 
-def tela_login(state: AppState, content: ui.element):
-    content.clear() # Limpa apenas o container principal
-    with content:
-        with ui.column().classes('w-full h-screen items-center justify-center bg-gray-100'):
-            with ui.card().classes('w-96 p-8'):
-                ui.label('CX Data').classes('text-3xl font-bold text-center mb-2 text-blue-600')
-                ui.label('Portal de Dashboards').classes('text-center text-gray-600 mb-6')
-                
-                email = ui.input('Email').classes('w-full').props('outlined')
-                senha = ui.input('Senha', password=True).classes('w-full').props('outlined')
-                erro = ui.label('').classes('text-red-600 text-sm mt-2 hidden')
-                
-                def tentar_login():
-                    user = autenticar_usuario(email.value.strip(), senha.value)
-                    if user:
-                        state.fazer_login(user)
-                        tela_principal(state, content)
-                    else:
-                        erro.text = 'Dados incorretos'; erro.classes(remove='hidden')
-                
-                ui.button('Entrar', on_click=tentar_login).classes('w-full bg-blue-600 text-white mt-4')
-                senha.on('keydown.enter', tentar_login)
+@ui.page('/login')
+def page_login():
+    """Tela de Login"""
+    state = app.storage.user.get('state', AppState())
+    
+    # Se já estiver logado, manda pra home
+    if state.user_email:
+        ui.open('/')
+        return
 
-def tela_principal(state: AppState, content: ui.element):
-    content.clear()
-    with content:
-        # Header
-        with ui.header().classes('bg-blue-600 text-white shadow-lg'):
-            with ui.row().classes('w-full items-center justify-between px-6 py-3'):
-                ui.label('CX Data').classes('text-2xl font-bold')
-                with ui.row().classes('items-center gap-4'):
-                    if state.perfil == 'admin':
-                        ui.button('Usuários', icon='person_add', on_click=lambda: abrir_modal_criar_usuario(state)).props('flat color=white')
-                    ui.label(state.user.email).classes('text-sm opacity-90')
-                    ui.button('Sair', icon='logout', on_click=lambda: [state.fazer_logout(), tela_login(state, content)]).props('flat color=white')
-        
-        # Conteúdo
-        with ui.column().classes('w-full p-8 bg-gray-50 min-h-screen'):
-            ui.label(f'Olá, {state.cliente.nome}').classes('text-xl text-gray-500')
-            ui.label('Meus Dashboards').classes('text-3xl font-bold mb-6 text-gray-800')
+    with ui.column().classes('w-full h-screen items-center justify-center bg-gray-100'):
+        with ui.card().classes('w-96 p-8 shadow-xl'):
+            ui.label('CX Data').classes('text-3xl font-bold text-center mb-2 text-blue-600 w-full')
+            ui.label('Acesso ao Portal').classes('text-center text-gray-500 mb-6 w-full')
             
-            if state.dashboards_autorizados:
-                with ui.grid(columns='repeat(auto-fill, minmax(300px, 1fr))').classes('gap-6 w-full'):
-                    for dash in state.dashboards_autorizados:
-                        # Card do Dashboard
-                        colors = {'financeiro': 'green', 'rh': 'blue', 'comercial': 'orange', 'operacional': 'purple'}
-                        color = colors.get(dash.tipo.lower(), 'gray')
-                        
-                        with ui.card().classes('cursor-pointer hover:shadow-xl transition').on('click', lambda d=dash: tela_dashboard(d, state, content)):
-                            with ui.card_section().classes(f'bg-{color}-100 p-6'):
-                                ui.icon('dashboard', size='3rem').classes(f'text-{color}-600')
-                            with ui.card_section().classes('p-4'):
-                                ui.label(dash.nome).classes('text-xl font-bold mb-2')
-                                ui.badge(dash.tipo.capitalize(), color=color)
-            else:
-                ui.label('Nenhum dashboard liberado.').classes('text-gray-500 mt-4')
+            email = ui.input('Email').classes('w-full').props('outlined')
+            senha = ui.input('Senha', password=True).classes('w-full').props('outlined')
+            erro = ui.label('').classes('text-red-500 text-sm hidden w-full text-center mt-2')
 
-def tela_dashboard(dashboard: Dashboard, state: AppState, content: ui.element):
-    content.clear()
-    with content:
-        with ui.header().classes('bg-blue-600 text-white shadow-lg'):
-            with ui.row().classes('w-full items-center justify-between px-6 py-3'):
-                with ui.row().classes('items-center gap-4'):
-                    ui.button(icon='arrow_back', on_click=lambda: tela_principal(state, content)).props('flat color=white')
-                    ui.label(dashboard.nome).classes('text-xl font-bold')
+            def try_login():
+                user = autenticar_usuario(email.value.strip(), senha.value)
+                if user:
+                    # 1. Salva na sessão
+                    state.login(user) 
+                    app.storage.user['state'] = state # Força persistência
+                    
+                    # 2. Recarrega para a página principal
+                    ui.open('/')
+                else:
+                    erro.text = 'Dados incorretos'
+                    erro.classes(remove='hidden')
+                    
+            ui.button('Entrar', on_click=try_login).classes('w-full bg-blue-600 text-white mt-4')
+            senha.on('keydown.enter', try_login)
+
+@ui.page('/')
+def page_home():
+    """Tela Principal"""
+    state = app.storage.user.get('state', AppState())
+    
+    # 1. Verifica se tem usuário na sessão
+    if not state or not state.user_email:
+        ui.open('/login')
+        return
+
+    # 2. Carrega dados frescos do banco
+    user = state.get_user_completo()
+    if not user:
+        # Se o usuário foi deletado do banco mas ta na sessão
+        state.logout()
+        ui.open('/login')
+        return
+
+    # Carrega dashboards e cliente
+    db = SessionLocal()
+    cliente = db.query(Cliente).filter(Cliente.id == user.cliente_id).first()
+    dashboards = obter_dashboards_autorizados(user.cliente_id, user.perfil)
+    db.close()
+
+    # --- DESENHO DA TELA ---
+    
+    # Header
+    with ui.header().classes('bg-blue-600 text-white shadow-md'):
+        with ui.row().classes('w-full items-center justify-between px-4 py-2'):
+            ui.label('CX Data').classes('text-xl font-bold')
+            with ui.row().classes('items-center gap-4'):
+                ui.label(user.email).classes('text-sm opacity-90')
+                def logout_action():
+                    state.logout()
+                    app.storage.user['state'] = state
+                    ui.open('/login')
+                ui.button(icon='logout', on_click=logout_action).props('flat round color=white')
+
+    # Corpo
+    with ui.column().classes('w-full p-8 bg-gray-50 min-h-screen'):
+        ui.label(f'Cliente: {cliente.nome}').classes('text-gray-500 font-medium')
+        ui.label('Meus Dashboards').classes('text-3xl font-bold text-gray-800 mb-6')
+
+        if dashboards:
+            with ui.grid(columns='repeat(auto-fill, minmax(300px, 1fr))').classes('gap-6 w-full'):
+                for dash in dashboards:
+                    # Card
+                    colors = {'financeiro': 'green', 'rh': 'blue', 'comercial': 'orange', 'operacional': 'purple'}
+                    c = colors.get(dash.tipo.lower(), 'gray')
+                    
+                    with ui.card().classes('cursor-pointer hover:shadow-lg transition').on('click', lambda d=dash: ui.open(f'/dashboard/{d.id}')):
+                        with ui.card_section().classes(f'bg-{c}-100 p-6 flex justify-center'):
+                            ui.icon('analytics', size='3rem').classes(f'text-{c}-600')
+                        with ui.card_section().classes('p-4'):
+                            ui.label(dash.nome).classes('text-lg font-bold')
+                            ui.badge(dash.tipo, color=c).classes('mt-2')
+        else:
+            with ui.column().classes('w-full items-center justify-center py-12'):
+                ui.icon('folder_off', size='4rem').classes('text-gray-300 mb-4')
+                ui.label('Nenhum dashboard encontrado para seu perfil.').classes('text-gray-400 text-lg')
+                if user.perfil == 'admin':
+                    ui.label('(Como Admin, você precisa cadastrar dashboards no banco)').classes('text-sm text-gray-400')
+
+@ui.page('/dashboard/{dash_id}')
+def page_dashboard(dash_id: int):
+    """Tela de Visualização do Dashboard"""
+    state = app.storage.user.get('state', AppState())
+    if not state or not state.user_email:
+        ui.open('/login'); return
+
+    db = SessionLocal()
+    dash = db.query(Dashboard).filter(Dashboard.id == dash_id).first()
+    db.close()
+
+    if not dash:
+        ui.label('Dashboard não encontrado'); return
+
+    with ui.column().classes('w-full h-screen p-0 m-0'):
+        # Barra superior simples
+        with ui.row().classes('w-full bg-blue-600 text-white p-2 items-center shadow-md'):
+            ui.button(icon='arrow_back', on_click=lambda: ui.open('/')).props('flat round color=white')
+            ui.label(dash.nome).classes('font-bold ml-2')
         
-        with ui.column().classes('w-full h-screen p-0 m-0'):
-            ui.html(f'<iframe src="{dashboard.link_embed}" style="width:100%; height:calc(100vh - 64px); border:none;"></iframe>')
-
+        # Iframe
+        ui.html(f'<iframe src="{dash.link_embed}" style="width:100%; height:calc(100vh - 60px); border:none;"></iframe>')
 
 # ============================================================================
-# INICIALIZAÇÃO
+# 6. INICIALIZAÇÃO
 # ============================================================================
 
 Base.metadata.create_all(bind=engine)
 
-@ui.page('/')
-def index():
-    # Cria o Container Principal (A "folha em branco" onde tudo será desenhado)
-    # Isso substitui a necessidade de limpar a página inteira
-    content = ui.column().classes('w-full min-h-screen p-0 m-0')
-    
-    # Inicializa o estado do usuário
-    state: AppState = app.storage.user.get('state', AppState())
-    
-    # Decide qual tela desenhar dentro do container
-    if state.esta_autenticado():
-        tela_principal(state, content)
-    else:
-        tela_login(state, content)
-
 if __name__ in {'__main__', '__mp_main__'}:
     port = int(os.environ.get('PORT', 8080))
     ui.run(
-        title='CX Data', 
-        favicon='📊', 
-        host='0.0.0.0', 
-        port=port, 
-        storage_secret='cx_secret_key_123',
+        title='CX Data Portal',
+        favicon='📊',
+        host='0.0.0.0',
+        port=port,
+        storage_secret='cx_key_9988', # Obrigatório
         reload=False
     )
