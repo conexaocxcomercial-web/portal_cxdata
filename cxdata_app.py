@@ -1,7 +1,7 @@
 """
 CX Data - Portal de Dashboards
 ============================================
-Versão Final 2.0: Forçando navegação moderna (ui.navigate.to)
+Versão Final 3.0: Correção do erro 'sanitize' no ui.html
 """
 
 from nicegui import ui, app
@@ -19,7 +19,6 @@ import os
 
 DATABASE_URL = os.getenv('DATABASE_URL')
 
-# Fallback de segurança
 if not DATABASE_URL:
     print("AVISO: DATABASE_URL não encontrada.")
     DATABASE_URL = "sqlite:///exemplo.db" 
@@ -125,7 +124,7 @@ def page_login():
     state = app.storage.user.get('state', AppState())
     
     if state.user_email:
-        ui.navigate.to('/') # <--- Mudança aqui (mais moderno)
+        ui.navigate.to('/')
         return
 
     with ui.column().classes('w-full h-screen items-center justify-center bg-gray-100'):
@@ -142,7 +141,7 @@ def page_login():
                 if user:
                     state.login(user) 
                     app.storage.user['state'] = state
-                    ui.navigate.to('/') # <--- Mudança aqui
+                    ui.navigate.to('/')
                 else:
                     erro.text = 'Dados incorretos'
                     erro.classes(remove='hidden')
@@ -155,27 +154,19 @@ def page_home():
     """Tela Principal"""
     state = app.storage.user.get('state', AppState())
     
-    # 1. Verifica sessão
     if not state or not state.user_email:
-        ui.navigate.to('/login') # <--- Mudança aqui
-        return
+        ui.navigate.to('/login'); return
 
-    # 2. Carrega dados
     user = state.get_user_completo()
     if not user:
-        state.logout()
-        ui.navigate.to('/login') # <--- Mudança aqui
-        return
+        state.logout(); ui.navigate.to('/login'); return
 
-    # Busca dados no banco
     db = SessionLocal()
     cliente = db.query(Cliente).filter(Cliente.id == user.cliente_id).first()
     dashboards = obter_dashboards_autorizados(user.cliente_id, user.perfil)
     db.close()
 
     # --- DESENHO DA TELA ---
-    
-    # Header
     with ui.header().classes('bg-blue-600 text-white shadow-md'):
         with ui.row().classes('w-full items-center justify-between px-4 py-2'):
             ui.label('CX Data').classes('text-xl font-bold')
@@ -184,10 +175,9 @@ def page_home():
                 def logout_action():
                     state.logout()
                     app.storage.user['state'] = state
-                    ui.navigate.to('/login') # <--- Mudança aqui
+                    ui.navigate.to('/login')
                 ui.button(icon='logout', on_click=logout_action).props('flat round color=white')
 
-    # Corpo
     with ui.column().classes('w-full p-8 bg-gray-50 min-h-screen'):
         ui.label(f'Cliente: {cliente.nome}').classes('text-gray-500 font-medium')
         ui.label('Meus Dashboards').classes('text-3xl font-bold text-gray-800 mb-6')
@@ -195,7 +185,6 @@ def page_home():
         if dashboards:
             with ui.grid(columns='repeat(auto-fill, minmax(300px, 1fr))').classes('gap-6 w-full'):
                 for dash in dashboards:
-                    # Card
                     colors = {'financeiro': 'green', 'rh': 'blue', 'comercial': 'orange', 'operacional': 'purple'}
                     c = colors.get(dash.tipo.lower(), 'gray')
                     
@@ -230,8 +219,11 @@ def page_dashboard(dash_id: int):
             ui.button(icon='arrow_back', on_click=lambda: ui.navigate.to('/')).props('flat round color=white')
             ui.label(dash.nome).classes('font-bold ml-2')
         
-        # Iframe
-        ui.html(f'<iframe src="{dash.link_embed}" style="width:100%; height:calc(100vh - 60px); border:none;"></iframe>')
+        # --- AQUI ESTÁ A CORREÇÃO: sanitize=False ---
+        ui.html(
+            f'<iframe src="{dash.link_embed}" style="width:100%; height:calc(100vh - 60px); border:none;"></iframe>', 
+            sanitize=False
+        )
 
 # ============================================================================
 # 6. INICIALIZAÇÃO
