@@ -1,7 +1,7 @@
 """
 CX Data - Portal de Dashboards Multi-Tenant
 ============================================
-Atualização: Ajustado para deploy no Render (Porta dinâmica e Host 0.0.0.0)
+Atualização: Correção do erro de Storage (RuntimeError) e Porta do Render
 """
 
 from nicegui import ui, app
@@ -23,7 +23,7 @@ DATABASE_URL = os.getenv(
     'postgresql://postgres:SUA_SENHA@db.seu_projeto.supabase.co:5432/postgres' 
 )
 
-# Correção para SQLAlchemy (Render/Supabase às vezes usam postgres://)
+# Correção para SQLAlchemy
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
@@ -282,15 +282,17 @@ def tela_dashboard(dashboard: Dashboard, state: AppState):
         ui.html(f'<iframe src="{dashboard.link_embed}" style="width: 100%; height: calc(100vh - 64px); border: none;"></iframe>')
 
 # ============================================================================
-# INICIALIZAÇÃO E EXECUÇÃO (AJUSTADO PARA RENDER)
+# INICIALIZAÇÃO E EXECUÇÃO
 # ============================================================================
 
 Base.metadata.create_all(bind=engine)
-app.storage.user['state'] = AppState()
+# REMOVIDO: app.storage.user['state'] = AppState() <--- A LINHA QUE CAUSAVA O ERRO FOI APAGADA
 
 @ui.page('/')
 def index():
+    # A inicialização correta acontece AQUI dentro, quando o usuário acessa
     state: AppState = app.storage.user.get('state', AppState())
+    
     if state.esta_autenticado():
         tela_principal(state)
     else:
@@ -298,14 +300,13 @@ def index():
 
 if __name__ in {'__main__', '__mp_main__'}:
     # Render define a porta na variável de ambiente PORT.
-    # Se rodar localmente, usa 8080 como fallback.
     port = int(os.environ.get('PORT', 8080))
     
     ui.run(
         title='CX Data', 
         favicon='📊', 
-        host='0.0.0.0', # <--- IMPORTANTE: Permite acesso externo no servidor
-        port=port,      # <--- IMPORTANTE: Usa a porta que o Render mandar
-        storage_secret='cx_secret_key_123',
-        reload=False    # <--- Desabilita reload automático em produção
+        host='0.0.0.0',
+        port=port,
+        storage_secret='cx_secret_key_123', # Necessário para o login funcionar
+        reload=False
     )
