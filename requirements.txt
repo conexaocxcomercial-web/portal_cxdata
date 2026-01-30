@@ -1,4 +1,3 @@
-nicegui
+nicegui>=1.4.26
 sqlalchemy
 psycopg2-binary
-
