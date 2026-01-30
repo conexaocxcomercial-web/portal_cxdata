@@ -1,8 +1,8 @@
 """
 CX Data - Portal de Dashboards
 ============================================
-Versão Premium UI 4.0: Interface SaaS profissional
-Paleta: #7371ff (primária), #bef533 (destaque), #1e1e1e (escuro), #dbbfff (secundária)
+Versão Professional UI 5.0: Interface SaaS Premium B2B
+Inspiração: Linear, Vercel, Stripe Dashboard
 """
 
 from nicegui import ui, app
@@ -121,54 +121,70 @@ class AppState:
 
 @ui.page('/login')
 def page_login():
-    """Tela de Login - Interface Premium"""
+    """Tela de Login - Design Corporativo Minimalista"""
     state = app.storage.user.get('state', AppState())
     
     if state.user_email:
         ui.navigate.to('/')
         return
 
-    # Background gradient premium
-    with ui.column().classes('w-full h-screen items-center justify-center').style('background: linear-gradient(135deg, #7371ff 0%, #dbbfff 100%);'):
-        with ui.card().classes('w-full max-w-md shadow-2xl').style('border-radius: 24px; border: none;'):
-            with ui.column().classes('p-10 gap-6'):
-                # Logo e título
-                with ui.column().classes('items-center gap-3 mb-2'):
-                    ui.label('📊').classes('text-6xl')
-                    ui.label('CX Data').classes('text-4xl font-bold').style('color: #7371ff; letter-spacing: -0.5px;')
-                    ui.label('Acesse seu portal de analytics').classes('text-base text-gray-500 font-light')
+    # Background clean corporativo
+    with ui.column().classes('w-full h-screen items-center justify-center').style('background: #fafafa;'):
+        
+        with ui.column().classes('w-full max-w-md px-6 gap-12'):
+            
+            # Logo e identidade - minimalista
+            with ui.column().classes('items-center gap-3'):
+                ui.label('CX Data').classes('text-3xl font-semibold').style('color: #1e1e1e; letter-spacing: -0.02em;')
+                ui.label('Analytics Platform').classes('text-sm font-normal').style('color: #737373;')
+            
+            # Container de login - sem card visível
+            with ui.column().classes('gap-6 w-full'):
                 
-                # Campos de entrada
-                with ui.column().classes('gap-4 w-full mt-4'):
-                    email = ui.input('Email').classes('w-full').props('outlined dense').style(
-                        'border-radius: 12px;'
-                    )
-                    senha = ui.input('Senha', password=True).classes('w-full').props('outlined dense').style(
-                        'border-radius: 12px;'
-                    )
-                    
-                    erro = ui.label('').classes('text-red-600 text-sm font-medium hidden w-full text-center')
+                # Campos minimalistas
+                email = ui.input('Email').classes('w-full').props('outlined borderless').style('''
+                    background: white;
+                    border: 1px solid #e5e5e5;
+                    border-radius: 8px;
+                    font-size: 15px;
+                ''')
+                
+                senha = ui.input('Senha', password=True).classes('w-full').props('outlined borderless').style('''
+                    background: white;
+                    border: 1px solid #e5e5e5;
+                    border-radius: 8px;
+                    font-size: 15px;
+                ''')
+                
+                erro = ui.label('').classes('text-sm font-medium hidden').style('color: #ef4444;')
 
-                    def try_login():
-                        user = autenticar_usuario(email.value.strip(), senha.value)
-                        if user:
-                            state.login(user) 
-                            app.storage.user['state'] = state
-                            ui.navigate.to('/')
-                        else:
-                            erro.text = '❌ Email ou senha incorretos'
-                            erro.classes(remove='hidden')
-                    
-                    # Botão premium
-                    ui.button('Entrar', on_click=try_login).classes('w-full text-white font-semibold text-base').style(
-                        'background: #7371ff; border-radius: 12px; padding: 14px; border: none; box-shadow: 0 4px 12px rgba(115, 113, 255, 0.3); transition: all 0.3s;'
-                    ).props('no-caps')
-                    
-                    senha.on('keydown.enter', try_login)
+                def try_login():
+                    user = autenticar_usuario(email.value.strip(), senha.value)
+                    if user:
+                        state.login(user) 
+                        app.storage.user['state'] = state
+                        ui.navigate.to('/')
+                    else:
+                        erro.text = 'Credenciais inválidas'
+                        erro.classes(remove='hidden')
+                
+                # Botão clean
+                ui.button('Acessar', on_click=try_login).classes('w-full font-medium').style('''
+                    background: #7371ff;
+                    color: white;
+                    border-radius: 8px;
+                    padding: 12px;
+                    border: none;
+                    font-size: 15px;
+                    cursor: pointer;
+                    transition: all 0.2s;
+                ''').props('no-caps flat')
+                
+                senha.on('keydown.enter', try_login)
 
 @ui.page('/')
 def page_home():
-    """Tela Principal - Interface Premium"""
+    """Tela Principal - Interface Corporativa Premium"""
     state = app.storage.user.get('state', AppState())
     
     if not state or not state.user_email:
@@ -183,77 +199,121 @@ def page_home():
     dashboards = obter_dashboards_autorizados(user.cliente_id, user.perfil)
     db.close()
 
-    # Header premium
-    with ui.header().classes('shadow-lg').style('background: #7371ff; border-bottom: 2px solid #bef533;'):
-        with ui.row().classes('w-full items-center justify-between px-8 py-4'):
-            with ui.row().classes('items-center gap-3'):
-                ui.label('📊').classes('text-3xl')
-                ui.label('CX Data').classes('text-2xl font-bold text-white').style('letter-spacing: -0.5px;')
+    # Layout com sidebar visual (não funcional, apenas estética)
+    with ui.row().classes('w-full h-screen').style('background: #fafafa; margin: 0; padding: 0;'):
+        
+        # Sidebar visual minimalista
+        with ui.column().classes('h-screen').style('''
+            width: 240px;
+            background: white;
+            border-right: 1px solid #e5e5e5;
+            padding: 24px 16px;
+        '''):
+            # Logo
+            with ui.column().classes('gap-1 mb-8'):
+                ui.label('CX Data').classes('text-lg font-semibold').style('color: #1e1e1e;')
+                ui.label('Analytics').classes('text-xs').style('color: #a3a3a3;')
             
-            with ui.row().classes('items-center gap-6'):
-                with ui.column().classes('items-end gap-0'):
-                    ui.label(user.email).classes('text-sm text-white font-medium')
-                    ui.label(f'{cliente.nome}').classes('text-xs').style('color: #bef533;')
+            # Menu item ativo
+            with ui.row().classes('items-center gap-3 px-3 py-2').style('''
+                background: #f5f5f5;
+                border-radius: 6px;
+            '''):
+                ui.icon('analytics', size='20px').style('color: #7371ff;')
+                ui.label('Dashboards').classes('text-sm font-medium').style('color: #1e1e1e;')
+        
+        # Conteúdo principal
+        with ui.column().classes('flex-1 h-screen overflow-auto').style('padding: 0;'):
+            
+            # Header interno clean
+            with ui.row().classes('w-full items-center justify-between').style('''
+                padding: 20px 40px;
+                background: white;
+                border-bottom: 1px solid #e5e5e5;
+            '''):
+                with ui.column().classes('gap-1'):
+                    ui.label(f'{cliente.nome}').classes('text-sm font-medium').style('color: #525252;')
+                    ui.label(user.email).classes('text-xs').style('color: #a3a3a3;')
                 
                 def logout_action():
                     state.logout()
                     app.storage.user['state'] = state
                     ui.navigate.to('/login')
                 
-                ui.button(icon='logout', on_click=logout_action).props('flat round').classes('text-white').style(
-                    'background: rgba(255, 255, 255, 0.1); transition: all 0.3s;'
-                )
-
-    # Container principal
-    with ui.column().classes('w-full p-8 min-h-screen').style('background: #f8f9fa;'):
-        # Cabeçalho da seção
-        with ui.column().classes('mb-8 gap-2'):
-            ui.label('Meus Dashboards').classes('text-4xl font-bold').style('color: #1e1e1e; letter-spacing: -1px;')
-            ui.label(f'Explore os analytics disponíveis para {cliente.nome}').classes('text-lg text-gray-500 font-light')
-
-        if dashboards:
-            # Grid de cards premium
-            with ui.grid(columns='repeat(auto-fill, minmax(320px, 1fr))').classes('gap-6 w-full'):
-                for dash in dashboards:
-                    # Mapeamento de cores por tipo
-                    tipo_colors = {
-                        'financeiro': {'bg': '#10b981', 'light': '#d1fae5', 'icon': 'account_balance'},
-                        'rh': {'bg': '#7371ff', 'light': '#dbbfff', 'icon': 'groups'},
-                        'comercial': {'bg': '#f59e0b', 'light': '#fef3c7', 'icon': 'trending_up'},
-                        'operacional': {'bg': '#8b5cf6', 'light': '#ede9fe', 'icon': 'settings'}
-                    }
-                    
-                    config = tipo_colors.get(dash.tipo.lower(), {'bg': '#6b7280', 'light': '#f3f4f6', 'icon': 'dashboard'})
-                    
-                    # Card premium com hover
-                    with ui.card().classes('cursor-pointer overflow-hidden').style(
-                        f'border-radius: 20px; border: 2px solid {config["light"]}; transition: all 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.05);'
-                    ).on('click', lambda d=dash: ui.navigate.to(f'/dashboard/{d.id}')):
-                        
-                        # Header do card com ícone
-                        with ui.card_section().classes('p-8 flex items-center justify-center').style(
-                            f'background: linear-gradient(135deg, {config["bg"]} 0%, {config["light"]} 100%);'
-                        ):
-                            ui.icon(config['icon'], size='3.5rem').classes('text-white').style('filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));')
-                        
-                        # Conteúdo do card
-                        with ui.card_section().classes('p-6'):
-                            ui.label(dash.nome).classes('text-xl font-bold mb-3').style('color: #1e1e1e;')
+                ui.button('Sair', on_click=logout_action).classes('text-sm').style('''
+                    background: transparent;
+                    color: #737373;
+                    border: 1px solid #e5e5e5;
+                    border-radius: 6px;
+                    padding: 6px 16px;
+                    font-weight: 500;
+                ''').props('no-caps flat')
+            
+            # Área de conteúdo
+            with ui.column().classes('w-full').style('padding: 40px; max-width: 1400px;'):
+                
+                # Título da seção
+                with ui.column().classes('gap-2 mb-8'):
+                    ui.label('Seus dashboards').classes('text-2xl font-semibold').style('color: #1e1e1e; letter-spacing: -0.02em;')
+                    ui.label('Acesse as análises disponíveis para sua conta').classes('text-sm').style('color: #737373;')
+                
+                if dashboards:
+                    # Grid de cards profissionais
+                    with ui.grid(columns='repeat(auto-fill, minmax(340px, 1fr))').classes('w-full').style('gap: 20px;'):
+                        for dash in dashboards:
                             
-                            with ui.row().classes('items-center gap-2'):
-                                ui.label(dash.tipo.upper()).classes('text-xs font-bold px-3 py-1').style(
-                                    f'background: {config["light"]}; color: {config["bg"]}; border-radius: 8px; letter-spacing: 0.5px;'
-                                )
-        else:
-            # Estado vazio premium
-            with ui.column().classes('w-full items-center justify-center py-20 gap-4'):
-                ui.icon('analytics', size='5rem').classes('text-gray-300')
-                ui.label('Nenhum dashboard disponível').classes('text-2xl font-bold text-gray-400')
-                ui.label('Novos dashboards serão exibidos aqui assim que forem configurados').classes('text-base text-gray-400 text-center max-w-md')
+                            # Configuração de cores por tipo
+                            tipo_config = {
+                                'financeiro': {'color': '#10b981', 'bg': '#ecfdf5', 'icon': 'account_balance_wallet'},
+                                'rh': {'color': '#7371ff', 'bg': '#f5f3ff', 'icon': 'people'},
+                                'comercial': {'color': '#f59e0b', 'bg': '#fffbeb', 'icon': 'storefront'},
+                                'operacional': {'color': '#8b5cf6', 'bg': '#faf5ff', 'icon': 'settings'}
+                            }
+                            
+                            config = tipo_config.get(dash.tipo.lower(), {'color': '#6b7280', 'bg': '#f9fafb', 'icon': 'dashboard'})
+                            
+                            # Card profissional
+                            with ui.column().classes('cursor-pointer').style(f'''
+                                background: white;
+                                border: 1px solid #e5e5e5;
+                                border-radius: 12px;
+                                padding: 0;
+                                transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+                                overflow: hidden;
+                            ''').on('click', lambda d=dash: ui.navigate.to(f'/dashboard/{d.id}')):
+                                
+                                # Header do card
+                                with ui.row().classes('items-center justify-between w-full').style(f'''
+                                    padding: 20px 24px;
+                                    background: {config["bg"]};
+                                    border-bottom: 1px solid #e5e5e5;
+                                '''):
+                                    ui.icon(config['icon'], size='24px').style(f'color: {config["color"]};')
+                                    
+                                    ui.label(dash.tipo.upper()).classes('text-xs font-semibold').style(f'''
+                                        color: {config["color"]};
+                                        letter-spacing: 0.05em;
+                                    ''')
+                                
+                                # Conteúdo
+                                with ui.column().classes('gap-2').style('padding: 24px;'):
+                                    ui.label(dash.nome).classes('text-base font-semibold').style('color: #1e1e1e; line-height: 1.4;')
+                                    
+                                    with ui.row().classes('items-center gap-2 mt-2'):
+                                        ui.label('Abrir dashboard').classes('text-sm').style('color: #7371ff;')
+                                        ui.icon('arrow_forward', size='16px').style('color: #7371ff;')
+                
+                else:
+                    # Estado vazio profissional
+                    with ui.column().classes('items-center justify-center w-full').style('padding: 80px 0;'):
+                        with ui.column().classes('items-center gap-4 max-w-sm text-center'):
+                            ui.icon('analytics', size='48px').style('color: #d4d4d4;')
+                            ui.label('Nenhum dashboard disponível').classes('text-lg font-semibold').style('color: #525252;')
+                            ui.label('Quando dashboards forem atribuídos à sua conta, eles aparecerão aqui.').classes('text-sm').style('color: #a3a3a3; line-height: 1.6;')
 
 @ui.page('/dashboard/{dash_id}')
 def page_dashboard(dash_id: int):
-    """Tela de Dashboard - Interface Premium"""
+    """Tela de Visualização - Embed Profissional Imersivo"""
     state = app.storage.user.get('state', AppState())
     if not state or not state.user_email:
         ui.navigate.to('/login'); return
@@ -265,24 +325,90 @@ def page_dashboard(dash_id: int):
     if not dash:
         ui.label('Dashboard não encontrado'); return
 
-    with ui.column().classes('w-full h-screen p-0 m-0'):
-        # Barra superior premium
-        with ui.row().classes('w-full items-center px-6 py-3 shadow-md').style(
-            'background: linear-gradient(90deg, #7371ff 0%, #9b99ff 100%); border-bottom: 2px solid #bef533;'
-        ):
-            ui.button(icon='arrow_back', on_click=lambda: ui.navigate.to('/')).props('flat round').classes('text-white').style(
-                'background: rgba(255, 255, 255, 0.15); transition: all 0.3s;'
-            )
-            
-            with ui.row().classes('items-center gap-3 ml-2'):
-                ui.icon('analytics', size='1.5rem').classes('text-white')
-                ui.label(dash.nome).classes('text-xl font-bold text-white').style('letter-spacing: -0.3px;')
+    # Container fullscreen profissional
+    with ui.column().classes('w-full h-screen').style('background: #fafafa; margin: 0; padding: 0;'):
         
-        # Iframe do dashboard (mantido exatamente como está)
-        ui.html(
-            f'<iframe src="{dash.link_embed}" style="width:100%; height:calc(100vh - 60px); border:none;"></iframe>', 
-            sanitize=False
-        )
+        # Header minimalista e discreto
+        with ui.row().classes('w-full items-center justify-between').style('''
+            padding: 12px 24px;
+            background: white;
+            border-bottom: 1px solid #e5e5e5;
+            height: 56px;
+        '''):
+            # Lado esquerdo
+            with ui.row().classes('items-center gap-3'):
+                ui.button(icon='arrow_back', on_click=lambda: ui.navigate.to('/')).style('''
+                    background: transparent;
+                    color: #525252;
+                    border: none;
+                    min-width: 36px;
+                    padding: 6px;
+                ''').props('flat round dense')
+                
+                with ui.row().classes('items-center gap-2'):
+                    ui.icon('analytics', size='20px').style('color: #7371ff;')
+                    ui.label(dash.nome).classes('text-sm font-semibold').style('color: #1e1e1e;')
+            
+            # Lado direito - badge discreta
+            ui.label(dash.tipo.upper()).classes('text-xs font-semibold').style('''
+                color: #737373;
+                background: #f5f5f5;
+                padding: 4px 12px;
+                border-radius: 6px;
+                letter-spacing: 0.05em;
+            ''')
+        
+        # Container do iframe profissional
+        with ui.column().classes('w-full flex-1').style('''
+            padding: 16px;
+            background: #fafafa;
+            position: relative;
+        '''):
+            
+            # Wrapper com sombra suave e bordas
+            with ui.column().classes('w-full h-full').style('''
+                background: white;
+                border-radius: 12px;
+                border: 1px solid #e5e5e5;
+                overflow: hidden;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            '''):
+                
+                # Loading state inicial
+                loading_container = ui.column().classes('w-full h-full items-center justify-center').style('''
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: white;
+                    z-index: 10;
+                ''')
+                
+                with loading_container:
+                    ui.spinner(size='lg').style('color: #7371ff;')
+                    ui.label('Carregando dashboard...').classes('text-sm mt-4').style('color: #a3a3a3;')
+                
+                # Iframe embutido profissionalmente
+                iframe_html = f'''
+                <iframe 
+                    src="{dash.link_embed}" 
+                    style="
+                        width: 100%;
+                        height: 100%;
+                        border: none;
+                        display: block;
+                        background: white;
+                    "
+                    onload="document.getElementById('loading-{dash_id}').style.display='none'"
+                    allowfullscreen
+                ></iframe>
+                '''
+                
+                ui.html(iframe_html, sanitize=False)
+                
+                # Esconder loading após carregar (via CSS puro)
+                loading_container.style(add=f'id: loading-{dash_id}')
 
 # ============================================================================
 # 6. INICIALIZAÇÃO
