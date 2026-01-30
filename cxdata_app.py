@@ -1,7 +1,7 @@
 """
 CX Data - Portal de Dashboards Multi-Tenant
 ============================================
-Atualização: Inclui funcionalidade de criação de usuários por Admins.
+Atualização: Ajustado para deploy no Render (Porta dinâmica e Host 0.0.0.0)
 """
 
 from nicegui import ui, app
@@ -23,6 +23,7 @@ DATABASE_URL = os.getenv(
     'postgresql://postgres:SUA_SENHA@db.seu_projeto.supabase.co:5432/postgres' 
 )
 
+# Correção para SQLAlchemy (Render/Supabase às vezes usam postgres://)
 if DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
@@ -281,7 +282,7 @@ def tela_dashboard(dashboard: Dashboard, state: AppState):
         ui.html(f'<iframe src="{dashboard.link_embed}" style="width: 100%; height: calc(100vh - 64px); border: none;"></iframe>')
 
 # ============================================================================
-# INICIALIZAÇÃO
+# INICIALIZAÇÃO E EXECUÇÃO (AJUSTADO PARA RENDER)
 # ============================================================================
 
 Base.metadata.create_all(bind=engine)
@@ -296,4 +297,15 @@ def index():
         tela_login(state)
 
 if __name__ in {'__main__', '__mp_main__'}:
-    ui.run(title='CX Data', favicon='📊', port=8080, storage_secret='cx_secret_key_123')
+    # Render define a porta na variável de ambiente PORT.
+    # Se rodar localmente, usa 8080 como fallback.
+    port = int(os.environ.get('PORT', 8080))
+    
+    ui.run(
+        title='CX Data', 
+        favicon='📊', 
+        host='0.0.0.0', # <--- IMPORTANTE: Permite acesso externo no servidor
+        port=port,      # <--- IMPORTANTE: Usa a porta que o Render mandar
+        storage_secret='cx_secret_key_123',
+        reload=False    # <--- Desabilita reload automático em produção
+    )
