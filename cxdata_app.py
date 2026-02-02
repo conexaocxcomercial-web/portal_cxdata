@@ -2,14 +2,12 @@
 CX Data - Enterprise Analytics Platform
 ============================================
 Product-grade B2B SaaS Dashboard Portal
-Design Philosophy: Linear + Vercel + Stripe + Notion Enterprise
-Architecture: Component-driven Design System
+Fix: Adicionado shared=True nos estilos globais para corrigir erro de deploy
 """
 
 from nicegui import ui, app
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Text
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.orm import sessionmaker, relationship, declarative_base # Atualizado para remover warnings
 import hashlib
 from typing import Optional, List, Callable, Dict, Any
 import os
@@ -370,7 +368,7 @@ class UIComponents:
 # ============================================================================
 
 class SkeletonLoader:
-    """Skeleton loading component with shimmer animation"""
+    """Skeleton loading component with shimmer effect"""
     
     @staticmethod
     def create(height: str = '400px'):
@@ -1271,6 +1269,7 @@ def page_dashboard(dash_id: int):
 
 def inject_global_styles():
     """Inject global styles and animations"""
+    # FIX: Adicionado shared=True aqui para resolver o erro de deploy
     ui.add_head_html(f'''
         <style>
             * {{
@@ -1332,7 +1331,7 @@ def inject_global_styles():
                 outline-offset: 2px;
             }}
         </style>
-    ''')
+    ''', shared=True)
 
 # ============================================================================
 # INITIALIZATION
