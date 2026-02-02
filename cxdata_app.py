@@ -2,7 +2,7 @@
 CX Data - Enterprise Analytics Platform
 ============================================
 Product-grade B2B SaaS Dashboard Portal
-Fix 4.0: Separação de HTML e JS para corrigir erro "HTML elements must not contain <script>"
+Fix Final 5.0: "Non-blocking CSS Loader" - Resolve o carregamento eterno removendo dependência de JS.
 """
 
 from nicegui import ui, app
@@ -399,7 +399,7 @@ def page_home():
 
 @ui.page('/dashboard/{dash_id}')
 def page_dashboard(dash_id: int):
-    """Enterprise Workspace Viewer"""
+    """Enterprise Workspace Viewer - Final Fix with Non-blocking CSS Loader"""
     state = app.storage.user.get('state', AppState())
     if not state or not state.user_email: ui.navigate.to('/login'); return
     user = state.get_user_completo()
@@ -457,72 +457,29 @@ def page_dashboard(dash_id: int):
             exit_btn = ui.button(icon='fullscreen_exit', on_click=toggle_fullscreen).props('no-caps flat').classes('hidden').style(f'position: absolute; top: 32px; right: 32px; z-index: 1000; background: {DS.SURFACE}; color: {DS.TEXT_PRIMARY}; border: 1px solid {DS.BORDER}; padding: 8px 16px; box-shadow: {DS.SHADOW_LG};')
             exit_btn.set_text('Exit focus mode')
             
+            # --- NON-BLOCKING CSS LOADER ---
+            # Aqui removemos todo o JS e dependemos apenas do Z-Index.
+            # O Skeleton fica no fundo (z-0). O Iframe fica na frente (z-10).
+            # Se o Iframe carregar transparente, vê-se o fundo. Se carregar branco, cobre o fundo.
+            
             embed_wrapper = ui.column().classes('w-full h-full').style(f'background: {DS.SURFACE}; border-radius: {DS.RADIUS_XL}; border: 1px solid {DS.BORDER}; overflow: hidden; box-shadow: {DS.SHADOW_XL}; position: relative;')
             
             with embed_wrapper:
-                loading_overlay = ui.column().classes('w-full h-full items-center justify-center absolute top-0 left-0 z-50').style(f'background: {DS.SURFACE}; transition: opacity {DS.TRANSITION_SLOW}, transform {DS.TRANSITION_SLOW};')
-                with loading_overlay:
+                # 1. SKELETON (NO FUNDO, Z-0)
+                with ui.column().classes('w-full h-full items-center justify-center absolute top-0 left-0 z-0').style(f'background: {DS.SURFACE};'):
                     with ui.column().classes('w-full h-full').style('padding: 40px;'):
                         SkeletonLoader.create('100%')
-                        with ui.column().classes('items-center gap-2 absolute').style('top: 50%; left: 50%; transform: translate(-50%, -50%);'):
-                            ui.html(f'<div style="width: 48px; height: 48px; border: 3px solid {DS.BORDER}; border-top-color: {DS.PRIMARY}; border-radius: 50%; animation: spin 1s linear infinite;"></div><style>@keyframes spin {{ to {{ transform: rotate(360deg); }} }}</style>', sanitize=False)
-                            ui.label('Preparing your workspace...').classes('text-base font-medium mt-4').style(f'color: {DS.TEXT_PRIMARY};')
                 
-                error_overlay = ui.column().classes('w-full h-full items-center justify-center absolute top-0 left-0 z-40 hidden').style(f'background: {DS.SURFACE};')
-                with error_overlay:
-                    LayoutComponents.empty_state(icon='error_outline', title='Failed to load workspace', description='Please check your connection and try again.', cta_text='Reload workspace', cta_action=lambda: ui.navigate.reload())
-                    with ui.row().classes('gap-3 mt-4'): UIComponents.ghost_button('Go back', on_click=lambda: ui.navigate.to('/'))
-                
-                iframe_id = f'workspace-iframe-{dash_id}'
-                
-                # 1. RENDERIZA APENAS O HTML DO IFRAME (SEM SCRIPTS)
+                # 2. IFRAME (NA FRENTE, Z-10)
+                # Removemos a opacidade 0 inicial. Ele já nasce visível.
                 ui.html(f'''
-                <iframe 
-                    id="{iframe_id}" 
-                    src="{dash.link_embed}" 
-                    style="width: 100%; height: 100%; border: none; display: block; background: white; opacity: 0; transition: opacity {DS.TRANSITION_SLOW};" 
-                    allowfullscreen 
-                    loading="lazy">
-                </iframe>
+                    <iframe 
+                        src="{dash.link_embed}" 
+                        style="width: 100%; height: 100%; border: none; display: block; position: relative; z-index: 10;" 
+                        allowfullscreen 
+                        loading="lazy">
+                    </iframe>
                 ''', sanitize=False)
-
-                # 2. EXECUTA O JAVASCRIPT SEPARADAMENTE
-                ui.run_javascript(f'''
-                    (function() {{
-                        const iframe = document.getElementById('{iframe_id}');
-                        const loadingOverlay = iframe.parentElement.querySelector('.absolute.z-50');
-                        const errorOverlay = iframe.parentElement.querySelector('.absolute.z-40');
-                        
-                        // Timeout for error
-                        const timeoutId = setTimeout(() => {{
-                            loadingOverlay.style.opacity = '0';
-                            loadingOverlay.style.transform = 'translateY(-20px)';
-                            setTimeout(() => {{
-                                loadingOverlay.classList.add('hidden');
-                                errorOverlay.classList.remove('hidden');
-                            }}, 300);
-                        }}, 15000);
-                        
-                        iframe.addEventListener('load', function() {{
-                            clearTimeout(timeoutId);
-                            loadingOverlay.style.opacity = '0';
-                            loadingOverlay.style.transform = 'translateY(-20px)';
-                            setTimeout(() => {{
-                                loadingOverlay.classList.add('hidden');
-                                iframe.style.opacity = '1';
-                            }}, 300);
-                        }});
-                        
-                        iframe.addEventListener('error', function() {{
-                            clearTimeout(timeoutId);
-                            loadingOverlay.style.opacity = '0';
-                            setTimeout(() => {{
-                                loadingOverlay.classList.add('hidden');
-                                errorOverlay.classList.remove('hidden');
-                            }}, 300);
-                        }});
-                    }})();
-                ''')
 
 # ============================================================================
 # GLOBAL STYLES
