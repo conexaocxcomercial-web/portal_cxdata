@@ -1,7 +1,7 @@
 """
 CX Data - Enterprise Analytics Platform
 ============================================
-Versão 7.0: Enterprise Premium UI/UX
+Versão 7.1: Topbar Navigation Premium
 """
 
 from nicegui import ui, app
@@ -148,6 +148,164 @@ class LayoutComponents:
                 max-width: 360px;
                 line-height: 1.5;
             ''')
+
+# ============================================================================
+# TOPBAR NAVIGATION COMPONENT - PREMIUM
+# ============================================================================
+
+class TopbarNavigation:
+    @staticmethod
+    def create(cliente_nome: str, user_email: str, current_page: str = 'home', breadcrumb: Optional[List[Dict]] = None):
+        """
+        Topbar premium com branding, breadcrumb e user menu
+        current_page: 'home' ou 'dashboard'
+        breadcrumb: lista de dicts com 'label' e 'onClick' (opcional)
+        """
+        with ui.row().classes('w-full items-center justify-between').style(f'''
+            padding: 0 {DS.SPACING_2XL}; 
+            background: {DS.SURFACE}; 
+            border-bottom: 1px solid {DS.BORDER};
+            height: 64px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, 0.95);
+        '''):
+            # Left: Branding + Breadcrumb
+            with ui.row().classes('items-center').style(f'gap: {DS.SPACING_XL};'):
+                # Branding (sempre presente)
+                branding = ui.row().classes('items-center cursor-pointer').style(f'gap: {DS.SPACING_MD};')
+                with branding:
+                    with ui.column().classes('items-center justify-center').style(f'''
+                        width: 32px; 
+                        height: 32px; 
+                        background: linear-gradient(135deg, {DS.PRIMARY} 0%, {DS.PRIMARY_HOVER} 100%); 
+                        border-radius: {DS.RADIUS_MD};
+                        box-shadow: {DS.SHADOW_XS};
+                    '''):
+                        ui.icon('analytics', size='18px', color='white')
+                    ui.label('CX Data').classes('text-sm').style(f'''
+                        color: {DS.TEXT_PRIMARY}; 
+                        font-weight: 700; 
+                        letter-spacing: -0.01em;
+                    ''')
+                branding.on('click', lambda: ui.navigate.to('/'))
+                
+                # Separator
+                if breadcrumb:
+                    ui.separator().classes('h-6').style(f'background: {DS.BORDER}; opacity: 0.5;')
+                    
+                    # Breadcrumb (contextual)
+                    with ui.row().classes('items-center').style(f'gap: {DS.SPACING_SM};'):
+                        for i, item in enumerate(breadcrumb):
+                            is_last = i == len(breadcrumb) - 1
+                            label = ui.label(item['label']).classes('text-sm').style(f'''
+                                color: {DS.TEXT_PRIMARY if is_last else DS.TEXT_SECONDARY}; 
+                                font-weight: {600 if is_last else 500};
+                                transition: color {DS.TRANSITION_FAST};
+                                cursor: {"default" if is_last or 'onClick' not in item else "pointer"};
+                            ''')
+                            if 'onClick' in item and not is_last:
+                                label.on('click', item['onClick'])
+                                label.on('mouseenter', lambda e: e.sender.style(f'color: {DS.TEXT_PRIMARY};'))
+                                label.on('mouseleave', lambda e: e.sender.style(f'color: {DS.TEXT_SECONDARY};'))
+                            
+                            if not is_last:
+                                ui.icon('chevron_right', size='16px').style(f'color: {DS.TEXT_DISABLED};')
+            
+            # Right: User Menu Premium
+            with ui.row().classes('items-center').style(f'gap: {DS.SPACING_MD};'):
+                # Avatar + Info
+                user_menu = ui.row().classes('items-center cursor-pointer').style(f'''
+                    gap: {DS.SPACING_MD}; 
+                    padding: {DS.SPACING_SM} {DS.SPACING_MD};
+                    border-radius: {DS.RADIUS_MD};
+                    transition: background {DS.TRANSITION_FAST};
+                ''')
+                
+                with user_menu:
+                    # Info (name + email)
+                    with ui.column().classes('items-end').style(f'gap: {DS.SPACING_XS};'):
+                        ui.label(cliente_nome.split()[0]).classes('text-sm').style(f'''
+                            color: {DS.TEXT_PRIMARY}; 
+                            font-weight: 600;
+                            line-height: 1;
+                        ''')
+                        ui.label(user_email).classes('text-xs').style(f'''
+                            color: {DS.TEXT_TERTIARY}; 
+                            line-height: 1;
+                        ''')
+                    
+                    # Avatar
+                    iniciais = ''.join([palavra[0].upper() for palavra in cliente_nome.split()[:2]])
+                    with ui.column().classes('items-center justify-center').style(f'''
+                        width: 36px; 
+                        height: 36px; 
+                        background: linear-gradient(135deg, {DS.PRIMARY_LIGHT} 0%, {DS.PRIMARY_ULTRA_LIGHT} 100%); 
+                        border: 1.5px solid {DS.BORDER}; 
+                        border-radius: {DS.RADIUS_FULL}; 
+                        color: {DS.PRIMARY}; 
+                        font-size: 12px; 
+                        font-weight: 700;
+                    '''):
+                        ui.label(iniciais)
+                    
+                    # Dropdown icon
+                    ui.icon('expand_more', size='18px').style(f'color: {DS.TEXT_TERTIARY};')
+                
+                # Hover effect
+                user_menu.on('mouseenter', lambda e: e.sender.style(f'background: {DS.SURFACE_HOVER};'))
+                user_menu.on('mouseleave', lambda e: e.sender.style(f'background: transparent;'))
+                
+                # Menu dropdown (via NiceGUI menu)
+                with user_menu:
+                    with ui.menu().props('offset-y').style(f'''
+                        background: {DS.SURFACE_ELEVATED}; 
+                        border: 1px solid {DS.BORDER}; 
+                        border-radius: {DS.RADIUS_LG}; 
+                        box-shadow: {DS.SHADOW_LG}; 
+                        padding: {DS.SPACING_SM};
+                        min-width: 200px;
+                    '''):
+                        # Menu items
+                        with ui.column().classes('w-full').style(f'gap: {DS.SPACING_XS};'):
+                            # Settings (disabled visually)
+                            settings_item = ui.row().classes('w-full items-center cursor-not-allowed').style(f'''
+                                gap: {DS.SPACING_MD}; 
+                                padding: {DS.SPACING_SM} {DS.SPACING_MD};
+                                border-radius: {DS.RADIUS_SM};
+                                opacity: 0.5;
+                            ''')
+                            with settings_item:
+                                ui.icon('settings', size='18px').style(f'color: {DS.TEXT_TERTIARY};')
+                                ui.label('Configurações').classes('text-sm').style(f'color: {DS.TEXT_SECONDARY};')
+                            
+                            ui.separator().style(f'background: {DS.BORDER}; margin: {DS.SPACING_SM} 0;')
+                            
+                            # Logout
+                            def logout_action():
+                                state = app.storage.user.get('state')
+                                if state:
+                                    state.logout()
+                                    app.storage.user['state'] = state
+                                ui.navigate.to('/login')
+                            
+                            logout_item = ui.row().classes('w-full items-center cursor-pointer').style(f'''
+                                gap: {DS.SPACING_MD}; 
+                                padding: {DS.SPACING_SM} {DS.SPACING_MD};
+                                border-radius: {DS.RADIUS_SM};
+                                transition: background {DS.TRANSITION_FAST};
+                            ''')
+                            with logout_item:
+                                ui.icon('logout', size='18px').style(f'color: {DS.TEXT_SECONDARY};')
+                                ui.label('Sair').classes('text-sm').style(f'color: {DS.TEXT_SECONDARY}; font-weight: 500;')
+                            
+                            logout_item.on('click', logout_action)
+                            logout_item.on('mouseenter', lambda e: e.sender.style(f'background: {DS.SURFACE_HOVER};'))
+                            logout_item.on('mouseleave', lambda e: e.sender.style(f'background: transparent;'))
 
 # ============================================================================
 # UI COMPONENTS - PREMIUM
@@ -437,115 +595,43 @@ def page_home():
     dashboards = obter_dashboards_autorizados(user.cliente_id, user.perfil)
     db.close()
 
-    with ui.row().classes('w-full h-screen').style(f'''
+    with ui.column().classes('w-full h-screen').style(f'''
         background: {DS.SURFACE_50}; 
         margin: 0; 
         padding: 0; 
         font-family: {DS.FONT};
     '''):
+        # Topbar Navigation
+        TopbarNavigation.create(
+            cliente_nome=cliente.nome, 
+            user_email=user.email,
+            current_page='home'
+        )
         
-        # --- SIDEBAR ULTRA-MINIMALISTA PREMIUM ---
-        with ui.column().classes('h-screen').style(f'''
-            width: 280px; 
-            background: {DS.SURFACE}; 
-            border-right: 1px solid {DS.BORDER}; 
-            padding: {DS.SPACING_2XL} {DS.SPACING_XL}; 
-            display: flex; 
-            flex-direction: column; 
-            gap: {DS.SPACING_3XL};
+        # Main Content (com padding-top para compensar topbar fixa)
+        with ui.column().classes('w-full').style(f'''
+            padding-top: 64px;
+            min-height: 100vh;
         '''):
-            
-            # Branding Premium
-            with ui.row().classes('items-center').style(f'gap: {DS.SPACING_MD}; padding: 0 {DS.SPACING_SM};'):
-                with ui.column().classes('items-center justify-center').style(f'''
-                    width: 36px; 
-                    height: 36px; 
-                    background: linear-gradient(135deg, {DS.PRIMARY} 0%, {DS.PRIMARY_HOVER} 100%); 
-                    border-radius: {DS.RADIUS_MD};
-                    box-shadow: {DS.SHADOW_SM};
-                '''):
-                    ui.icon('analytics', size='20px', color='white')
-                ui.label('CX Data').classes('text-base').style(f'''
-                    color: {DS.TEXT_PRIMARY}; 
-                    font-weight: 700; 
-                    letter-spacing: -0.02em;
-                ''')
-            
-            # Spacer - Empurra footer para baixo
-            ui.element('div').classes('flex-1')
-
-            # User Profile Card Premium
-            with ui.column().classes('w-full').style(f'gap: {DS.SPACING_LG};'):
-                ui.separator().style(f'background: {DS.BORDER}; opacity: 0.6;')
-                
-                with ui.row().classes('items-center w-full cursor-pointer').style(f'''
-                    gap: {DS.SPACING_MD}; 
-                    padding: {DS.SPACING_MD}; 
-                    border-radius: {DS.RADIUS_MD}; 
-                    transition: background {DS.TRANSITION_FAST};
-                '''):
-                    # Avatar com iniciais
-                    iniciais = ''.join([palavra[0].upper() for palavra in cliente.nome.split()[:2]])
-                    with ui.column().classes('items-center justify-center').style(f'''
-                        width: 40px; 
-                        height: 40px; 
-                        background: linear-gradient(135deg, {DS.PRIMARY_LIGHT} 0%, {DS.PRIMARY_ULTRA_LIGHT} 100%); 
-                        border: 1.5px solid {DS.BORDER}; 
-                        border-radius: {DS.RADIUS_FULL}; 
-                        color: {DS.PRIMARY}; 
-                        font-size: 13px; 
-                        font-weight: 700;
-                        flex-shrink: 0;
-                    '''):
-                        ui.label(iniciais)
-                    
-                    # Info do usuário
-                    with ui.column().classes('flex-1 overflow-hidden').style(f'gap: {DS.SPACING_XS};'):
-                        ui.label(cliente.nome).classes('text-sm truncate').style(f'''
-                            color: {DS.TEXT_PRIMARY}; 
-                            font-weight: 600;
-                            line-height: 1.3;
-                        ''')
-                        ui.label(user.email).classes('text-xs truncate').style(f'''
-                            color: {DS.TEXT_TERTIARY}; 
-                            line-height: 1.2;
-                        ''')
-                    
-                    # Settings icon
-                    ui.icon('settings', size='18px').style(f'''
-                        color: {DS.TEXT_DISABLED};
-                        flex-shrink: 0;
-                    ''')
-
-        # --- MAIN CONTENT ---
-        with ui.column().classes('flex-1 h-screen overflow-auto').style(f'''
-            padding: 0; 
-            background: {DS.SURFACE_50};
-        '''):
-            # Header Premium
-            with ui.row().classes('w-full items-center justify-between').style(f'''
-                padding: {DS.SPACING_XL} {DS.SPACING_3XL}; 
-                border-bottom: 1px solid {DS.BORDER};
+            # Page Header
+            with ui.column().classes('w-full').style(f'''
+                padding: {DS.SPACING_3XL} {DS.SPACING_2XL} {DS.SPACING_XL} {DS.SPACING_2XL};
                 background: {DS.SURFACE};
+                border-bottom: 1px solid {DS.BORDER_LIGHT};
             '''):
-                with ui.column().style(f'gap: {DS.SPACING_XS};'):
-                    ui.label('Seus Workspaces').classes('text-xl').style(f'''
-                        color: {DS.TEXT_PRIMARY}; 
-                        font-weight: 700; 
-                        letter-spacing: -0.02em;
-                    ''')
-                    ui.label(f'Bem-vindo de volta, {cliente.nome.split()[0]}').classes('text-sm').style(f'''
-                        color: {DS.TEXT_SECONDARY};
-                    ''')
-                
-                def logout_action(): 
-                    state.logout()
-                    app.storage.user['state'] = state
-                    ui.navigate.to('/login')
-                UIComponents.ghost_button('Sair', on_click=logout_action, icon='logout')
+                with LayoutComponents.page_container(padding='0'):
+                    with ui.column().style(f'gap: {DS.SPACING_SM};'):
+                        ui.label('Seus Workspaces').classes('text-2xl').style(f'''
+                            color: {DS.TEXT_PRIMARY}; 
+                            font-weight: 700; 
+                            letter-spacing: -0.02em;
+                        ''')
+                        ui.label(f'Bem-vindo de volta, {cliente.nome.split()[0]}').classes('text-sm').style(f'''
+                            color: {DS.TEXT_SECONDARY};
+                        ''')
             
             # Workspace Grid
-            with LayoutComponents.page_container():
+            with LayoutComponents.page_container(padding=f'{DS.SPACING_2XL}'):
                 if dashboards:
                     # Section Header
                     with ui.row().classes('w-full items-center justify-between').style(f'margin-bottom: {DS.SPACING_XL};'):
@@ -636,11 +722,12 @@ def page_home():
                             '''))
                             card.on('click', lambda d=dash: ui.navigate.to(f'/dashboard/{d.id}'))
                 else:
-                    LayoutComponents.empty_state(
-                        icon='analytics', 
-                        title='Nenhum workspace disponível', 
-                        description='Você ainda não tem workspaces atribuídos. Entre em contato com seu administrador.'
-                    )
+                    with ui.column().classes('w-full').style(f'padding: {DS.SPACING_3XL} 0;'):
+                        LayoutComponents.empty_state(
+                            icon='analytics', 
+                            title='Nenhum workspace disponível', 
+                            description='Você ainda não tem workspaces atribuídos. Entre em contato com seu administrador.'
+                        )
 
 @ui.page('/dashboard/{dash_id}')
 def page_dashboard(dash_id: int):
@@ -651,6 +738,7 @@ def page_dashboard(dash_id: int):
     
     db = SessionLocal()
     dash = db.query(Dashboard).filter(Dashboard.id == dash_id).first()
+    cliente = db.query(Cliente).filter(Cliente.id == user.cliente_id).first()
     db.close()
 
     if not dash:
@@ -668,46 +756,25 @@ def page_dashboard(dash_id: int):
         padding: 0; 
         overflow: hidden;
     '''):
-        # Header Premium
-        with ui.row().classes('w-full items-center').style(f'''
-            padding: {DS.SPACING_LG} {DS.SPACING_XL}; 
-            background: {DS.SURFACE}; 
-            border-bottom: 1px solid {DS.BORDER}; 
-            height: 64px; 
-            flex-shrink: 0;
-            gap: {DS.SPACING_LG};
-        '''):
-            # Back button
-            back_btn = ui.button(icon='arrow_back', on_click=lambda: ui.navigate.to('/')).props('flat round dense').style(f'''
-                color: {DS.TEXT_SECONDARY};
-                transition: all {DS.TRANSITION_FAST};
-            ''')
-            back_btn.on('mouseenter', lambda e: e.sender.style(f'background: {DS.SURFACE_HOVER}; color: {DS.TEXT_PRIMARY};'))
-            back_btn.on('mouseleave', lambda e: e.sender.style(f'background: transparent; color: {DS.TEXT_SECONDARY};'))
-            
-            # Separator
-            ui.separator().classes('h-6').style(f'background: {DS.BORDER}; opacity: 0.6;')
-            
-            # Breadcrumb
-            with ui.row().classes('items-center').style(f'gap: {DS.SPACING_SM};'):
-                home_link = ui.label('Workspaces').classes('text-sm cursor-pointer').style(f'''
-                    color: {DS.TEXT_SECONDARY}; 
-                    font-weight: 500;
-                    transition: color {DS.TRANSITION_FAST};
-                ''')
-                home_link.on('click', lambda: ui.navigate.to('/'))
-                home_link.on('mouseenter', lambda e: e.sender.style(f'color: {DS.TEXT_PRIMARY};'))
-                home_link.on('mouseleave', lambda e: e.sender.style(f'color: {DS.TEXT_SECONDARY};'))
-                
-                ui.icon('chevron_right', size='16px').style(f'color: {DS.TEXT_DISABLED};')
-                
-                ui.label(dash.nome).classes('text-sm').style(f'''
-                    color: {DS.TEXT_PRIMARY}; 
-                    font-weight: 600;
-                ''')
+        # Topbar Navigation com Breadcrumb
+        TopbarNavigation.create(
+            cliente_nome=cliente.nome,
+            user_email=user.email,
+            current_page='dashboard',
+            breadcrumb=[
+                {'label': 'Workspaces', 'onClick': lambda: ui.navigate.to('/')},
+                {'label': dash.nome}
+            ]
+        )
 
-        # Embed Container Premium
-        content_area = ui.column().classes('w-full flex-grow relative').style('padding: 0; margin: 0; overflow: hidden;')
+        # Embed Container (com padding-top para compensar topbar fixa)
+        content_area = ui.column().classes('w-full flex-grow relative').style(f'''
+            padding: 0; 
+            margin: 0; 
+            overflow: hidden;
+            margin-top: 64px;
+        ''')
+        
         with content_area:
             # Loading Skeleton
             with ui.column().classes('w-full h-full absolute top-0 left-0 z-0 items-center justify-center').style(f'''
