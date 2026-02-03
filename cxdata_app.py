@@ -1,7 +1,7 @@
 """
 CX Data - Enterprise Analytics Platform
 ============================================
-Versão 6.1: Menu Lateral Limpo (Removido Reports/Projects/Settings)
+Versão 6.2: Sidebar Profissional (Estrutura Visual, Categorias e User Card)
 """
 
 from nicegui import ui, app
@@ -19,12 +19,12 @@ import random
 
 class DS:
     """Design System - Centralized design tokens"""
-    PRIMARY = '#6366f1'       # Indigo Brand Color
+    PRIMARY = '#6366f1'       
     PRIMARY_HOVER = '#4f46e5'
     PRIMARY_LIGHT = '#eef2ff'
     
     SURFACE = '#ffffff'
-    SURFACE_50 = '#fafbfc'
+    SURFACE_50 = '#fafbfc' # Fundo levemente cinza
     SURFACE_100 = '#f7f8fa'
     SURFACE_HOVER = '#f3f4f6'
     
@@ -114,6 +114,35 @@ class UIComponents:
                 label = ui.label(item['label']).classes('text-sm').style(f'color: {DS.TEXT_SECONDARY if i < len(items) - 1 else DS.TEXT_PRIMARY}; font-weight: {500 if i == len(items) - 1 else 400}; cursor: {"pointer" if "onClick" in item else "default"};')
                 if 'onClick' in item: label.on('click', item['onClick'])
                 if i < len(items) - 1: ui.icon('chevron_right', size='16px').style(f'color: {DS.TEXT_DISABLED};')
+
+    @staticmethod
+    def sidebar_item(label: str, icon: str, active: bool = False, on_click=None):
+        """Novo componente para item de menu da sidebar"""
+        bg_color = DS.SURFACE if active else 'transparent'
+        text_color = DS.TEXT_PRIMARY if active else DS.TEXT_SECONDARY
+        font_weight = '600' if active else '500'
+        shadow = DS.SHADOW_SM if active else 'none'
+        border = f'1px solid {DS.BORDER}' if active else '1px solid transparent'
+        
+        item = ui.row().classes('w-full items-center gap-3 px-3 py-2 cursor-pointer').style(f'''
+            background: {bg_color};
+            border-radius: {DS.RADIUS_MD};
+            border: {border};
+            box-shadow: {shadow};
+            transition: all {DS.TRANSITION_FAST};
+        ''')
+        
+        with item:
+            ui.icon(icon, size='18px').style(f'color: {text_color if active else DS.TEXT_TERTIARY};')
+            ui.label(label).classes('text-sm').style(f'color: {text_color}; font-weight: {font_weight}; flex: 1;')
+        
+        if on_click:
+            item.on('click', on_click)
+        
+        # Hover effect
+        if not active:
+            item.on('mouseenter', lambda e: e.sender.style(f'background: {DS.SURFACE_HOVER}; color: {DS.TEXT_PRIMARY};'))
+            item.on('mouseleave', lambda e: e.sender.style(f'background: transparent; color: {DS.TEXT_SECONDARY};'))
 
 # ============================================================================
 # SKELETON LOADER
@@ -221,15 +250,12 @@ def page_login():
         ui.html(f'<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-image: radial-gradient(circle at 20px 20px, rgba(99, 102, 241, 0.03) 1px, transparent 0); background-size: 40px 40px; pointer-events: none;"></div>', sanitize=False)
         
         with ui.column().classes('w-full max-w-md px-8 relative z-10').style('gap: 32px;'):
-            # Simple Branding
             with ui.column().classes('items-center gap-2'):
                 ui.label('CX Data').classes('text-3xl font-bold').style(f'color: {DS.TEXT_PRIMARY};')
                 ui.label('Analytics Platform').classes('text-sm').style(f'color: {DS.TEXT_TERTIARY};')
             
-            # Login Card
             with ui.column().classes('w-full gap-6').style(f'background: {DS.SURFACE}; border: 1px solid {DS.BORDER_LIGHT}; border-radius: {DS.RADIUS_XL}; padding: 40px; box-shadow: {DS.SHADOW_MD};'):
                 ui.label('Sign in to your workspace').classes('text-lg font-semibold').style(f'color: {DS.TEXT_PRIMARY};')
-                
                 email = UIComponents.input_field('Email address', icon='mail')
                 senha = UIComponents.input_field('Password', password=True, icon='lock')
                 erro_label = ui.label('').classes('text-sm text-red-500 hidden')
@@ -259,77 +285,96 @@ def page_home():
     dashboards = obter_dashboards_autorizados(user.cliente_id, user.perfil)
     db.close()
 
-    with ui.row().classes('w-full h-screen').style(f'background: {DS.SURFACE_50}; margin: 0; padding: 0; font-family: {DS.FONT};'):
+    with ui.row().classes('w-full h-screen').style(f'background: {DS.SURFACE}; margin: 0; padding: 0; font-family: {DS.FONT};'):
         
-        # --- SIDEBAR LIMPA ---
-        with ui.column().classes('h-screen').style(f'width: 260px; background: {DS.SURFACE}; border-right: 1px solid {DS.BORDER}; padding: 32px 24px; display: flex; flex-direction: column; gap: 40px;'):
+        # --- SIDEBAR PROFISSIONAL ---
+        # Fundo mudado para SURFACE_50 (Cinza claro) para separar do conteúdo branco
+        with ui.column().classes('h-screen').style(f'width: 280px; background: {DS.SURFACE_50}; border-right: 1px solid {DS.BORDER}; padding: 32px 20px; display: flex; flex-direction: column; gap: 40px;'):
             
-            # Logo: Apenas Texto
-            with ui.column().classes('gap-0'):
-                ui.label('CX Data').classes('text-lg font-bold').style(f'color: {DS.TEXT_PRIMARY}; letter-spacing: -0.02em;')
+            # 1. Branding Area
+            with ui.row().classes('items-center gap-3 px-2'):
+                # Ícone de marca sutil
+                with ui.column().classes('items-center justify-center').style(f'width: 32px; height: 32px; background: {DS.PRIMARY}; border-radius: 6px;'):
+                    ui.icon('analytics', size='18px', color='white')
+                ui.label('CX Data').classes('text-lg font-bold').style(f'color: {DS.TEXT_PRIMARY}; letter-spacing: -0.01em;')
             
-            # Navigation: APENAS WORKSPACES (Removidos outros itens)
-            with ui.column().classes('gap-4 flex-1'):
-                # Item ativo
-                ui.label('Workspaces').classes('text-sm font-bold cursor-pointer').style(f'color: {DS.TEXT_PRIMARY};')
-            
-            # User Footer
-            with ui.column().classes('gap-2'):
-                ui.separator()
-                ui.label(cliente.nome).classes('text-sm font-bold truncate').style(f'color: {DS.TEXT_PRIMARY};')
-                ui.label(user.email).classes('text-xs truncate').style(f'color: {DS.TEXT_TERTIARY};')
+            # 2. Menu Principal
+            with ui.column().classes('gap-2 w-full flex-1'):
+                # Seção: PLATFORM
+                ui.label('PLATFORM').classes('text-xs font-bold px-3 mb-1').style(f'color: {DS.TEXT_TERTIARY}; letter-spacing: 0.05em;')
+                
+                # Workspaces (Ativo)
+                UIComponents.sidebar_item('Workspaces', 'dashboard', active=True)
+                
+                # Espaçador
+                ui.element('div').classes('h-6')
+                
+                # Seção: SUPPORT (Visual Filler)
+                ui.label('SUPPORT').classes('text-xs font-bold px-3 mb-1').style(f'color: {DS.TEXT_TERTIARY}; letter-spacing: 0.05em;')
+                UIComponents.sidebar_item('Documentation', 'description', active=False)
+                UIComponents.sidebar_item('Help Center', 'help_outline', active=False)
+
+            # 3. User Profile Card (Bottom)
+            with ui.column().classes('w-full'):
+                ui.separator().style(f'background: {DS.BORDER}; margin-bottom: 16px;')
+                
+                with ui.row().classes('items-center gap-3 w-full p-2 cursor-pointer').style(f'border-radius: {DS.RADIUS_MD}; transition: background 0.2s;'):
+                    # Avatar
+                    iniciais = ''.join([palavra[0].upper() for palavra in cliente.nome.split()[:2]])
+                    with ui.column().classes('items-center justify-center').style(f'width: 36px; height: 36px; background: {DS.SURFACE}; border: 1px solid {DS.BORDER}; border-radius: 50%; color: {DS.TEXT_PRIMARY}; font-size: 12px; font-weight: 700;'):
+                        ui.label(iniciais)
+                    
+                    # Info
+                    with ui.column().classes('gap-0 flex-1'):
+                        ui.label(cliente.nome).classes('text-sm font-bold truncate').style(f'color: {DS.TEXT_PRIMARY}; max-width: 120px;')
+                        ui.label(user.email).classes('text-xs truncate').style(f'color: {DS.TEXT_SECONDARY}; max-width: 120px;')
+                    
+                    # Settings Icon
+                    ui.icon('settings', size='16px').style(f'color: {DS.TEXT_TERTIARY};')
 
         # --- MAIN CONTENT ---
-        with ui.column().classes('flex-1 h-screen overflow-auto').style('padding: 0;'):
-            # Header Superior da Home
-            with ui.row().classes('w-full items-center justify-between').style(f'padding: 24px 40px;'):
-                ui.label(f'Welcome, {cliente.nome}').classes('text-xl font-semibold').style(f'color: {DS.TEXT_PRIMARY};')
+        with ui.column().classes('flex-1 h-screen overflow-auto').style(f'padding: 0; background: {DS.SURFACE};'):
+            # Header Superior
+            with ui.row().classes('w-full items-center justify-between').style(f'padding: 24px 40px; border-bottom: 1px solid {DS.BORDER_LIGHT};'):
+                with ui.column().classes('gap-1'):
+                    ui.label('Dashboard Overview').classes('text-xl font-bold').style(f'color: {DS.TEXT_PRIMARY}; letter-spacing: -0.02em;')
+                    ui.label(f'Welcome back, {cliente.nome}').classes('text-sm').style(f'color: {DS.TEXT_SECONDARY};')
                 
                 def logout_action(): state.logout(); app.storage.user['state'] = state; ui.navigate.to('/login')
                 UIComponents.ghost_button('Sign out', on_click=logout_action, icon='logout')
             
-            # Grid de Workspaces
+            # Grid
             with LayoutComponents.page_container():
-                LayoutComponents.section_header(title='Your Workspaces', badge=f'{len(dashboards)}' if dashboards else None)
-                
                 if dashboards:
-                    # Cards Padronizados
-                    with ui.grid(columns='repeat(auto-fill, minmax(340px, 1fr))').classes('w-full').style('gap: 24px;'):
-                        for idx, dash in enumerate(dashboards):
-                            
-                            # Card Container
-                            card = ui.column().classes('cursor-pointer group').style(f'''
-                                background: {DS.SURFACE}; 
-                                border: 1px solid {DS.BORDER}; 
-                                border-radius: {DS.RADIUS_LG}; 
-                                overflow: hidden; 
-                                transition: all {DS.TRANSITION_FAST}; 
-                                box-shadow: {DS.SHADOW_SM};
-                                animation: fadeInUp 0.5s ease-out forwards; 
-                                animation-delay: {idx * 0.05}s;
-                                opacity: 0;
-                            ''')
-                            
-                            with card:
-                                # Standard Header
-                                with ui.row().classes('items-center justify-between w-full').style(f'padding: 24px; background: {DS.SURFACE_50}; border-bottom: 1px solid {DS.BORDER_LIGHT};'):
-                                    # Standard Icon Box
-                                    with ui.column().classes('items-center justify-center').style(f'width: 48px; height: 48px; background: white; border: 1px solid {DS.BORDER}; border-radius: {DS.RADIUS_MD};'):
-                                        ui.icon('bar_chart', size='24px').style(f'color: {DS.PRIMARY};')
-                                    
-                                    # Standard Badge
-                                    ui.label('DASHBOARD').classes('text-xs font-bold').style(f'color: {DS.TEXT_TERTIARY}; letter-spacing: 0.05em;')
-                                
-                                # Body
-                                with ui.column().classes('gap-2').style('padding: 24px;'):
-                                    ui.label(dash.nome).classes('text-lg font-bold').style(f'color: {DS.TEXT_PRIMARY}; line-height: 1.3;')
-                                    ui.label(dash.tipo.capitalize()).classes('text-sm').style(f'color: {DS.TEXT_SECONDARY};')
-                                    
-                                    # Seta indicativa
-                                    with ui.row().classes('w-full justify-end mt-2'):
-                                        ui.icon('arrow_forward', size='20px').style(f'color: {DS.PRIMARY}; opacity: 0.8;')
+                    # Filtro/Header da Grid
+                    with ui.row().classes('w-full items-center justify-between mb-6'):
+                        ui.label('All Workspaces').classes('text-base font-semibold').style(f'color: {DS.TEXT_PRIMARY};')
+                        ui.label(f'{len(dashboards)} items').classes('text-xs font-medium px-2 py-1').style(f'color: {DS.TEXT_SECONDARY}; background: {DS.SURFACE_HOVER}; border-radius: 4px;')
 
-                            # Hover Effect
+                    with ui.grid(columns='repeat(auto-fill, minmax(320px, 1fr))').classes('w-full').style('gap: 24px;'):
+                        for idx, dash in enumerate(dashboards):
+                            card = ui.column().classes('cursor-pointer group').style(f'''
+                                background: {DS.SURFACE}; border: 1px solid {DS.BORDER}; border-radius: {DS.RADIUS_LG}; 
+                                overflow: hidden; transition: all {DS.TRANSITION_FAST}; box-shadow: {DS.SHADOW_SM};
+                                animation: fadeInUp 0.5s ease-out forwards; animation-delay: {idx * 0.05}s; opacity: 0;
+                            ''')
+                            with card:
+                                # Header do Card (Icon + Dots)
+                                with ui.row().classes('items-start justify-between w-full').style(f'padding: 20px 20px 0 20px;'):
+                                    with ui.column().classes('items-center justify-center').style(f'width: 40px; height: 40px; background: {DS.SURFACE_50}; border: 1px solid {DS.BORDER}; border-radius: {DS.RADIUS_MD};'):
+                                        ui.icon('bar_chart', size='20px').style(f'color: {DS.PRIMARY};')
+                                    ui.icon('more_horiz', size='20px').style(f'color: {DS.TEXT_TERTIARY};')
+                                
+                                # Body do Card
+                                with ui.column().classes('gap-2').style('padding: 16px 20px 24px 20px;'):
+                                    ui.label(dash.nome).classes('text-base font-bold').style(f'color: {DS.TEXT_PRIMARY}; line-height: 1.3;')
+                                    ui.label(f'{dash.tipo.capitalize()} Dashboard').classes('text-xs').style(f'color: {DS.TEXT_SECONDARY};')
+                                
+                                # Footer do Card
+                                with ui.row().classes('w-full items-center justify-between').style(f'padding: 12px 20px; background: {DS.SURFACE_50}; border-top: 1px solid {DS.BORDER_LIGHT};'):
+                                    ui.label('View Analytics').classes('text-xs font-semibold').style(f'color: {DS.PRIMARY};')
+                                    ui.icon('arrow_forward', size='14px').style(f'color: {DS.PRIMARY};')
+
                             card.on('mouseenter', lambda e, c=card: c.style(f'border-color: {DS.PRIMARY}; transform: translateY(-2px); box-shadow: {DS.SHADOW_MD};'))
                             card.on('mouseleave', lambda e, c=card: c.style(f'border-color: {DS.BORDER}; transform: translateY(0); box-shadow: {DS.SHADOW_SM};'))
                             card.on('click', lambda d=dash: ui.navigate.to(f'/dashboard/{d.id}'))
@@ -352,7 +397,6 @@ def page_dashboard(dash_id: int):
         return
 
     with ui.column().classes('w-full h-screen').style(f'background: {DS.SURFACE_50}; margin: 0; padding: 0; overflow: hidden;'):
-        
         # Header Limpo
         header = ui.row().classes('w-full items-center gap-4').style(f'padding: 12px 24px; background: {DS.SURFACE}; border-bottom: 1px solid {DS.BORDER}; height: 60px; flex-shrink: 0;')
         with header:
@@ -363,9 +407,7 @@ def page_dashboard(dash_id: int):
                 ui.label('/').classes('text-sm').style(f'color: {DS.TEXT_DISABLED};')
                 ui.label(dash.nome).classes('text-sm font-bold').style(f'color: {DS.TEXT_PRIMARY};')
 
-        # Área do Dashboard Full
         content_area = ui.column().classes('w-full flex-grow relative').style('padding: 0; margin: 0; overflow: hidden;')
-        
         with content_area:
             with ui.column().classes('w-full h-full absolute top-0 left-0 z-0 items-center justify-center').style(f'background: {DS.SURFACE};'):
                  SkeletonLoader.create('100%')
@@ -373,16 +415,7 @@ def page_dashboard(dash_id: int):
             ui.html(f'''
                 <iframe 
                     src="{dash.link_embed}" 
-                    style="
-                        position: absolute; 
-                        top: 0; 
-                        left: 0; 
-                        width: 100%; 
-                        height: 100%; 
-                        border: none; 
-                        z-index: 10;
-                        background: transparent;
-                    " 
+                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; z-index: 10; background: transparent;" 
                     allowfullscreen>
                 </iframe>
             ''', sanitize=False)
