@@ -1,7 +1,7 @@
 """
 CX Data - Enterprise Analytics Platform
 ============================================
-Versão 6.0: Ajustes de Layout (Iframe Full, Sidebar Limpa, Cards Padrão)
+Versão 6.1: Menu Lateral Limpo (Removido Reports/Projects/Settings)
 """
 
 from nicegui import ui, app
@@ -264,18 +264,14 @@ def page_home():
         # --- SIDEBAR LIMPA ---
         with ui.column().classes('h-screen').style(f'width: 260px; background: {DS.SURFACE}; border-right: 1px solid {DS.BORDER}; padding: 32px 24px; display: flex; flex-direction: column; gap: 40px;'):
             
-            # 5. Logo: Apenas Texto
+            # Logo: Apenas Texto
             with ui.column().classes('gap-0'):
-                ui.label('CX Data Analytics').classes('text-lg font-bold').style(f'color: {DS.TEXT_PRIMARY}; letter-spacing: -0.02em;')
+                ui.label('CX Data').classes('text-lg font-bold').style(f'color: {DS.TEXT_PRIMARY}; letter-spacing: -0.02em;')
             
-            # 4. Navigation: Texto simples, sem vetor, sem fundo azul
+            # Navigation: APENAS WORKSPACES (Removidos outros itens)
             with ui.column().classes('gap-4 flex-1'):
-                # Item ativo (apenas negrito/cor, sem box)
+                # Item ativo
                 ui.label('Workspaces').classes('text-sm font-bold cursor-pointer').style(f'color: {DS.TEXT_PRIMARY};')
-                
-                # Itens inativos
-                for label in ['Reports', 'Projects', 'Settings']:
-                    ui.label(label).classes('text-sm font-medium cursor-pointer').style(f'color: {DS.TEXT_SECONDARY}; hover: color: {DS.TEXT_PRIMARY}; transition: color 0.2s;')
             
             # User Footer
             with ui.column().classes('gap-2'):
@@ -297,7 +293,7 @@ def page_home():
                 LayoutComponents.section_header(title='Your Workspaces', badge=f'{len(dashboards)}' if dashboards else None)
                 
                 if dashboards:
-                    # 6. Cards Padronizados (Todos iguais)
+                    # Cards Padronizados
                     with ui.grid(columns='repeat(auto-fill, minmax(340px, 1fr))').classes('w-full').style('gap: 24px;'):
                         for idx, dash in enumerate(dashboards):
                             
@@ -315,7 +311,7 @@ def page_home():
                             ''')
                             
                             with card:
-                                # Standard Header (Visual Padrão para todos)
+                                # Standard Header
                                 with ui.row().classes('items-center justify-between w-full').style(f'padding: 24px; background: {DS.SURFACE_50}; border-bottom: 1px solid {DS.BORDER_LIGHT};'):
                                     # Standard Icon Box
                                     with ui.column().classes('items-center justify-center').style(f'width: 48px; height: 48px; background: white; border: 1px solid {DS.BORDER}; border-radius: {DS.RADIUS_MD};'):
@@ -355,34 +351,25 @@ def page_dashboard(dash_id: int):
         ui.label('Dashboard not found').classes('text-xl p-8')
         return
 
-    # Container da Página Inteira (Sem margens extras para maximizar espaço)
     with ui.column().classes('w-full h-screen').style(f'background: {DS.SURFACE_50}; margin: 0; padding: 0; overflow: hidden;'):
         
-        # 2. Header Limpo: Apenas Voltar e Título
+        # Header Limpo
         header = ui.row().classes('w-full items-center gap-4').style(f'padding: 12px 24px; background: {DS.SURFACE}; border-bottom: 1px solid {DS.BORDER}; height: 60px; flex-shrink: 0;')
         with header:
-            # Botão Voltar Simples
             back_btn = ui.button(icon='arrow_back', on_click=lambda: ui.navigate.to('/')).props('flat round dense').style(f'color: {DS.TEXT_PRIMARY};')
-            
-            # Separador Vertical
             ui.separator().classes('h-6').style(f'background: {DS.BORDER};')
-            
-            # Breadcrumb / Título
             with ui.row().classes('items-center gap-2'):
                 ui.label('Workspaces').classes('text-sm cursor-pointer').style(f'color: {DS.TEXT_SECONDARY};').on('click', lambda: ui.navigate.to('/'))
                 ui.label('/').classes('text-sm').style(f'color: {DS.TEXT_DISABLED};')
                 ui.label(dash.nome).classes('text-sm font-bold').style(f'color: {DS.TEXT_PRIMARY};')
 
-        # 1. Área do Dashboard (Iframe Full)
-        # Usamos flex-grow para ocupar todo o espaço restante e w-full para largura total
+        # Área do Dashboard Full
         content_area = ui.column().classes('w-full flex-grow relative').style('padding: 0; margin: 0; overflow: hidden;')
         
         with content_area:
-            # Loader (Z-Index 0: Fica atrás)
             with ui.column().classes('w-full h-full absolute top-0 left-0 z-0 items-center justify-center').style(f'background: {DS.SURFACE};'):
                  SkeletonLoader.create('100%')
             
-            # Iframe (Z-Index 10: Fica na frente. Sem bordas, 100% width/height)
             ui.html(f'''
                 <iframe 
                     src="{dash.link_embed}" 
