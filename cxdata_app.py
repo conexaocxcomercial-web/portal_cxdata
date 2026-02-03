@@ -1,7 +1,7 @@
 """
 CX Data - Enterprise Analytics Platform
 ============================================
-Versão 6.3: Sidebar 100% Funcional (Removido Help/Documentation)
+Versão 6.4: Sidebar Ultra-Minimalista + Tradução PT-BR
 """
 
 from nicegui import ui, app
@@ -283,24 +283,19 @@ def page_home():
 
     with ui.row().classes('w-full h-screen').style(f'background: {DS.SURFACE}; margin: 0; padding: 0; font-family: {DS.FONT};'):
         
-        # --- SIDEBAR LIMPA E FUNCIONAL ---
+        # --- SIDEBAR ULTRA-MINIMALISTA ---
         with ui.column().classes('h-screen').style(f'width: 280px; background: {DS.SURFACE_50}; border-right: 1px solid {DS.BORDER}; padding: 32px 20px; display: flex; flex-direction: column; gap: 40px;'):
             
-            # 1. Branding
+            # 1. Branding (Mantido)
             with ui.row().classes('items-center gap-3 px-2'):
                 with ui.column().classes('items-center justify-center').style(f'width: 32px; height: 32px; background: {DS.PRIMARY}; border-radius: 6px;'):
                     ui.icon('analytics', size='18px', color='white')
                 ui.label('CX Data').classes('text-lg font-bold').style(f'color: {DS.TEXT_PRIMARY}; letter-spacing: -0.01em;')
             
-            # 2. Menu Principal
-            with ui.column().classes('gap-2 w-full flex-1'):
-                # Seção: PLATFORM
-                ui.label('PLATFORM').classes('text-xs font-bold px-3 mb-1').style(f'color: {DS.TEXT_TERTIARY}; letter-spacing: 0.05em;')
-                
-                # Único Item: Workspaces
-                UIComponents.sidebar_item('Workspaces', 'dashboard', active=True)
+            # 2. Espaçador (Substitui o Menu) - Empurra o footer para baixo
+            ui.element('div').classes('flex-1')
 
-            # 3. User Profile Card
+            # 3. User Profile Card (Mantido)
             with ui.column().classes('w-full'):
                 ui.separator().style(f'background: {DS.BORDER}; margin-bottom: 16px;')
                 with ui.row().classes('items-center gap-3 w-full p-2 cursor-pointer').style(f'border-radius: {DS.RADIUS_MD}; transition: background 0.2s;'):
@@ -314,17 +309,21 @@ def page_home():
 
         # --- MAIN CONTENT ---
         with ui.column().classes('flex-1 h-screen overflow-auto').style(f'padding: 0; background: {DS.SURFACE};'):
+            # Header Superior (Traduzido)
             with ui.row().classes('w-full items-center justify-between').style(f'padding: 24px 40px; border-bottom: 1px solid {DS.BORDER_LIGHT};'):
                 with ui.column().classes('gap-1'):
-                    ui.label('Dashboard Overview').classes('text-xl font-bold').style(f'color: {DS.TEXT_PRIMARY}; letter-spacing: -0.02em;')
-                    ui.label(f'Welcome back, {cliente.nome}').classes('text-sm').style(f'color: {DS.TEXT_SECONDARY};')
+                    # COPY AJUSTADO
+                    ui.label('Seus Workspaces').classes('text-xl font-bold').style(f'color: {DS.TEXT_PRIMARY}; letter-spacing: -0.02em;')
+                    ui.label(f'Bem-vindo de volta, {cliente.nome}').classes('text-sm').style(f'color: {DS.TEXT_SECONDARY};')
                 def logout_action(): state.logout(); app.storage.user['state'] = state; ui.navigate.to('/login')
                 UIComponents.ghost_button('Sign out', on_click=logout_action, icon='logout')
             
+            # Grid
             with LayoutComponents.page_container():
                 if dashboards:
                     with ui.row().classes('w-full items-center justify-between mb-6'):
-                        ui.label('All Workspaces').classes('text-base font-semibold').style(f'color: {DS.TEXT_PRIMARY};')
+                        # COPY AJUSTADO
+                        ui.label('Todos os Workspaces').classes('text-base font-semibold').style(f'color: {DS.TEXT_PRIMARY};')
                         ui.label(f'{len(dashboards)} items').classes('text-xs font-medium px-2 py-1').style(f'color: {DS.TEXT_SECONDARY}; background: {DS.SURFACE_HOVER}; border-radius: 4px;')
 
                     with ui.grid(columns='repeat(auto-fill, minmax(320px, 1fr))').classes('w-full').style('gap: 24px;'):
@@ -343,13 +342,15 @@ def page_home():
                                     ui.label(dash.nome).classes('text-base font-bold').style(f'color: {DS.TEXT_PRIMARY}; line-height: 1.3;')
                                     ui.label(f'{dash.tipo.capitalize()} Dashboard').classes('text-xs').style(f'color: {DS.TEXT_SECONDARY};')
                                 with ui.row().classes('w-full items-center justify-between').style(f'padding: 12px 20px; background: {DS.SURFACE_50}; border-top: 1px solid {DS.BORDER_LIGHT};'):
-                                    ui.label('View Analytics').classes('text-xs font-semibold').style(f'color: {DS.PRIMARY};')
+                                    # COPY AJUSTADO
+                                    ui.label('Abrir Workspace').classes('text-xs font-semibold').style(f'color: {DS.PRIMARY};')
                                     ui.icon('arrow_forward', size='14px').style(f'color: {DS.PRIMARY};')
                             card.on('mouseenter', lambda e, c=card: c.style(f'border-color: {DS.PRIMARY}; transform: translateY(-2px); box-shadow: {DS.SHADOW_MD};'))
                             card.on('mouseleave', lambda e, c=card: c.style(f'border-color: {DS.BORDER}; transform: translateY(0); box-shadow: {DS.SHADOW_SM};'))
                             card.on('click', lambda d=dash: ui.navigate.to(f'/dashboard/{d.id}'))
                 else:
-                    LayoutComponents.empty_state(icon='analytics', title='No workspaces available', description='Dashboards assigned to you will appear here.')
+                    # COPY AJUSTADO
+                    LayoutComponents.empty_state(icon='analytics', title='Nenhum workspace disponível', description='Os workspaces atribuídos a você aparecerão aqui.')
 
 @ui.page('/dashboard/{dash_id}')
 def page_dashboard(dash_id: int):
