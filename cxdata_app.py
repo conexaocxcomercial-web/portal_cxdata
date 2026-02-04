@@ -1,7 +1,7 @@
 """
 CX Data - Enterprise Analytics Platform
 ============================================
-Versão 7.5: Fix Final de Atributos (BORDER_HOVER e RADIUS_SM adicionados)
+Versão 7.6: Correção Definitiva da Classe DS (Sombras Restauradas)
 """
 
 from nicegui import ui, app
@@ -30,7 +30,7 @@ class DS:
     
     BORDER = '#dee2e6'
     BORDER_LIGHT = '#e9ecef'
-    BORDER_HOVER = '#adb5bd' # ADICIONADO: Correção do erro de atributo
+    BORDER_HOVER = '#adb5bd'
     BORDER_FOCUS = '#0f62fe'
     
     TEXT_PRIMARY = '#212529'
@@ -39,13 +39,15 @@ class DS:
     TEXT_DISABLED = '#adb5bd'
     TEXT_INVERSE = '#ffffff'
     
+    # --- SOMBRAS RESTAURADAS ---
+    SHADOW_XS = '0 1px 2px 0 rgba(0, 0, 0, 0.05)'
     SHADOW_SM = '0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px 0 rgba(0, 0, 0, 0.04)'
     SHADOW_MD = '0 4px 8px -2px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.04)'
+    SHADOW_LG = '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)'
     SHADOW_FOCUS = '0 0 0 3px rgba(15, 98, 254, 0.12)'
     
     FONT = '-apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
     
-    # Spacing
     SPACING_SM = '8px'
     SPACING_MD = '12px'
     SPACING_LG = '16px'
@@ -53,8 +55,7 @@ class DS:
     SPACING_2XL = '32px'
     SPACING_3XL = '48px'
     
-    # Radius
-    RADIUS_SM = '4px'    # ADICIONADO: Correção do erro de atributo
+    RADIUS_SM = '4px'
     RADIUS_MD = '8px'
     RADIUS_LG = '12px'
     RADIUS_XL = '16px'
