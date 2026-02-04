@@ -38,125 +38,116 @@ import random
 
 class DS:
 
-    """Design System - Enterprise Grade"""
+"""Design System - Enterprise Grade"""
 
-    
 
-    # Primary Colors - Sophisticated Blue
+# Primary Colors - Sophisticated Blue
 
-    PRIMARY = '#0f62fe'
+PRIMARY = '#0f62fe'
 
-    PRIMARY_HOVER = '#0353e9'
+PRIMARY_HOVER = '#0353e9'
 
-    PRIMARY_ACTIVE = '#002d9c'
+PRIMARY_ACTIVE = '#002d9c'
 
-    PRIMARY_LIGHT = '#e8f0ff'
+PRIMARY_LIGHT = '#e8f0ff'
 
-    PRIMARY_ULTRA_LIGHT = '#f5f9ff'
+PRIMARY_ULTRA_LIGHT = '#f5f9ff'
 
-    
 
-    # Surfaces - Neutral & Clean
+# Surfaces - Neutral & Clean
 
-    SURFACE = '#ffffff'
+SURFACE = '#ffffff'
 
-    SURFACE_50 = '#f8f9fa'
+SURFACE_50 = '#f8f9fa'
 
-    SURFACE_100 = '#f1f3f5'
+SURFACE_100 = '#f1f3f5'
 
-    SURFACE_200 = '#e9ecef'
+SURFACE_200 = '#e9ecef'
 
-    SURFACE_HOVER = '#f8f9fa'
+SURFACE_HOVER = '#f8f9fa'
 
-    SURFACE_ELEVATED = '#ffffff'
+SURFACE_ELEVATED = '#ffffff'
 
-    
 
-    # Borders - Subtle & Refined
+# Borders - Subtle & Refined
 
-    BORDER = '#dee2e6'
+BORDER = '#dee2e6'
 
-    BORDER_LIGHT = '#e9ecef'
+BORDER_LIGHT = '#e9ecef'
 
-    BORDER_HOVER = '#adb5bd'
+BORDER_HOVER = '#adb5bd'
 
-    BORDER_FOCUS = '#0f62fe'
+BORDER_FOCUS = '#0f62fe'
 
-    
 
-    # Text - Clear Hierarchy
+# Text - Clear Hierarchy
 
-    TEXT_PRIMARY = '#212529'
+TEXT_PRIMARY = '#212529'
 
-    TEXT_SECONDARY = '#495057'
+TEXT_SECONDARY = '#495057'
 
-    TEXT_TERTIARY = '#6c757d'
+TEXT_TERTIARY = '#6c757d'
 
-    TEXT_DISABLED = '#adb5bd'
+TEXT_DISABLED = '#adb5bd'
 
-    TEXT_INVERSE = '#ffffff'
+TEXT_INVERSE = '#ffffff'
 
-    
 
-    # Shadows - Depth & Elevation
+# Shadows - Depth & Elevation
 
-    SHADOW_XS = '0 1px 2px 0 rgba(0, 0, 0, 0.03)'
+SHADOW_XS = '0 1px 2px 0 rgba(0, 0, 0, 0.03)'
 
-    SHADOW_SM = '0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px 0 rgba(0, 0, 0, 0.04)'
+SHADOW_SM = '0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px 0 rgba(0, 0, 0, 0.04)'
 
-    SHADOW_MD = '0 4px 8px -2px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.04)'
+SHADOW_MD = '0 4px 8px -2px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.04)'
 
-    SHADOW_LG = '0 12px 24px -4px rgba(0, 0, 0, 0.10), 0 4px 8px -4px rgba(0, 0, 0, 0.06)'
+SHADOW_LG = '0 12px 24px -4px rgba(0, 0, 0, 0.10), 0 4px 8px -4px rgba(0, 0, 0, 0.06)'
 
-    SHADOW_FOCUS = '0 0 0 3px rgba(15, 98, 254, 0.12)'
+SHADOW_FOCUS = '0 0 0 3px rgba(15, 98, 254, 0.12)'
 
-    
 
-    # Typography - Professional Sans
+# Typography - Professional Sans
 
-    FONT = '-apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
+FONT = '-apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
 
-    
 
-    # Spacing
+# Spacing
 
-    SPACING_XS = '4px'
+SPACING_XS = '4px'
 
-    SPACING_SM = '8px'
+SPACING_SM = '8px'
 
-    SPACING_MD = '12px'
+SPACING_MD = '12px'
 
-    SPACING_LG = '16px'
+SPACING_LG = '16px'
 
-    SPACING_XL = '24px'
+SPACING_XL = '24px'
 
-    SPACING_2XL = '32px'
+SPACING_2XL = '32px'
 
-    SPACING_3XL = '48px'
+SPACING_3XL = '48px'
 
-    
 
-    # Radius - Consistent & Modern
+# Radius - Consistent & Modern
 
-    RADIUS_SM = '6px'
+RADIUS_SM = '6px'
 
-    RADIUS_MD = '8px'
+RADIUS_MD = '8px'
 
-    RADIUS_LG = '12px'
+RADIUS_LG = '12px'
 
-    RADIUS_XL = '16px'
+RADIUS_XL = '16px'
 
-    RADIUS_FULL = '9999px'
+RADIUS_FULL = '9999px'
 
-    
 
-    # Transitions - Smooth & Fast
+# Transitions - Smooth & Fast
 
-    TRANSITION_FAST = '120ms cubic-bezier(0.4, 0, 0.2, 1)'
+TRANSITION_FAST = '120ms cubic-bezier(0.4, 0, 0.2, 1)'
 
-    TRANSITION_BASE = '200ms cubic-bezier(0.4, 0, 0.2, 1)'
+TRANSITION_BASE = '200ms cubic-bezier(0.4, 0, 0.2, 1)'
 
-    TRANSITION_SLOW = '300ms cubic-bezier(0.4, 0, 0.2, 1)'
+TRANSITION_SLOW = '300ms cubic-bezier(0.4, 0, 0.2, 1)'
 
 
 
@@ -170,135 +161,131 @@ class DS:
 
 class LayoutComponents:
 
-    @staticmethod
+@staticmethod
 
-    def page_container(max_width: str = '1400px', padding: str = '32px'):
+def page_container(max_width: str = '1400px', padding: str = '32px'):
 
-        return ui.column().classes('w-full').style(f'''
+return ui.column().classes('w-full').style(f'''
 
-            padding: {padding};
+padding: {padding};
 
-            max-width: {max_width};
+max-width: {max_width};
 
-            margin: 0 auto;
+margin: 0 auto;
 
-        ''')
+''')
 
-    
 
-    @staticmethod
+@staticmethod
 
-    def page_header(title: str, subtitle: Optional[str] = None):
+def page_header(title: str, subtitle: Optional[str] = None):
 
-        with ui.column().classes('w-full gap-1').style(f'margin-bottom: {DS.SPACING_2XL};'):
+with ui.column().classes('w-full gap-1').style(f'margin-bottom: {DS.SPACING_2XL};'):
 
-            ui.label(title).classes('text-2xl').style(f'''
+ui.label(title).classes('text-2xl').style(f'''
 
-                color: {DS.TEXT_PRIMARY};
+color: {DS.TEXT_PRIMARY};
 
-                font-weight: 700;
+font-weight: 700;
 
-                letter-spacing: -0.03em;
+letter-spacing: -0.03em;
 
-                line-height: 1.2;
+line-height: 1.2;
 
-                font-family: {DS.FONT};
+font-family: {DS.FONT};
 
-            ''')
+''')
 
-            if subtitle:
+if subtitle:
 
-                ui.label(subtitle).classes('text-sm').style(f'''
+ui.label(subtitle).classes('text-sm').style(f'''
 
-                    color: {DS.TEXT_SECONDARY};
+color: {DS.TEXT_SECONDARY};
 
-                    line-height: 1.5;
+line-height: 1.5;
 
-                    margin-top: 4px;
+margin-top: 4px;
 
-                ''')
+''')
 
-    
 
-    @staticmethod
+@staticmethod
 
-    def section_header(title: str, badge: Optional[str] = None):
+def section_header(title: str, badge: Optional[str] = None):
 
-        with ui.row().classes('w-full items-center gap-3').style(f'margin-bottom: {DS.SPACING_LG};'):
+with ui.row().classes('w-full items-center gap-3').style(f'margin-bottom: {DS.SPACING_LG};'):
 
-            ui.label(title).classes('text-sm').style(f'''
+ui.label(title).classes('text-sm').style(f'''
 
-                color: {DS.TEXT_PRIMARY};
+color: {DS.TEXT_PRIMARY};
 
-                font-weight: 600;
+font-weight: 600;
 
-                letter-spacing: -0.01em;
+letter-spacing: -0.01em;
 
-            ''')
+''')
 
-            if badge:
+if badge:
 
-                ui.label(badge).classes('text-xs').style(f'''
+ui.label(badge).classes('text-xs').style(f'''
 
-                    color: {DS.TEXT_TERTIARY};
+color: {DS.TEXT_TERTIARY};
 
-                    background: {DS.SURFACE_100};
+background: {DS.SURFACE_100};
 
-                    padding: 4px 10px;
+padding: 4px 10px;
 
-                    border-radius: {DS.RADIUS_FULL};
+border-radius: {DS.RADIUS_FULL};
 
-                    font-weight: 500;
+font-weight: 500;
 
-                    letter-spacing: 0;
+letter-spacing: 0;
 
-                ''')
+''')
 
-    
 
-    
 
-    @staticmethod
+@staticmethod
 
-    def empty_state(icon: str, title: str, description: str):
+def empty_state(icon: str, title: str, description: str):
 
-        with ui.column().classes('w-full items-center justify-center').style(f'padding: {DS.SPACING_3XL} {DS.SPACING_XL};'):
+with ui.column().classes('w-full items-center justify-center').style(f'padding: {DS.SPACING_3XL} {DS.SPACING_XL};'):
 
-            with ui.column().classes('items-center justify-center').style(f'''
+with ui.column().classes('items-center justify-center').style(f'''
 
-                width: 56px;
+width: 56px;
 
-                height: 56px;
+height: 56px;
 
-                background: {DS.SURFACE_100};
+background: {DS.SURFACE_100};
 
-                border-radius: {DS.RADIUS_LG};
+border-radius: {DS.RADIUS_LG};
 
-                margin-bottom: {DS.SPACING_LG};
+margin-bottom: {DS.SPACING_LG};
 
-            '''):
+'''):
 
-                ui.icon(icon, size='28px').style(f'color: {DS.TEXT_DISABLED};')
+ui.icon(icon, size='28px').style(f'color: {DS.TEXT_DISABLED};')
 
-            ui.label(title).classes('text-base').style(f'''
+ui.label(title).classes('text-base').style(f'''
 
-                color: {DS.TEXT_PRIMARY};
+color: {DS.TEXT_PRIMARY};
 
-                font-weight: 600;
+font-weight: 600;
 
-                margin-bottom: {DS.SPACING_XS};
+margin-bottom: {DS.SPACING_XS};
 
-            ''')
+''')
 
-            ui.label(description).classes('text-sm text-center').style(f'''
+ui.label(description).classes('text-sm text-center').style(f'''
 
-                color: {DS.TEXT_SECONDARY};
+color: {DS.TEXT_SECONDARY};
 
-                max-width: 360px;
+max-width: 360px;
 
-                line-height: 1.5;
+line-height: 1.5;
 
-            ''')
+''')
 
 
 
@@ -312,317 +299,296 @@ class LayoutComponents:
 
 class TopbarNavigation:
 
-    @staticmethod
+@staticmethod
 
-    def create(cliente_nome: str, user_email: str, current_page: str = 'home', breadcrumb: Optional[List[Dict]] = None):
+def create(cliente_nome: str, user_email: str, current_page: str = 'home', breadcrumb: Optional[List[Dict]] = None):
 
-        """
+"""
 
-        Topbar premium com branding, breadcrumb e user menu
+Topbar premium com branding, breadcrumb e user menu
 
-        current_page: 'home' ou 'dashboard'
+current_page: 'home' ou 'dashboard'
 
-        breadcrumb: lista de dicts com 'label' e 'onClick' (opcional)
+breadcrumb: lista de dicts com 'label' e 'onClick' (opcional)
 
-        """
+"""
 
-        with ui.row().classes('w-full items-center justify-between').style(f'''
+with ui.row().classes('w-full items-center justify-between').style(f'''
 
-            padding: 0 {DS.SPACING_2XL};
+padding: 0 {DS.SPACING_2XL};
 
-            background: {DS.SURFACE};
+background: {DS.SURFACE};
 
-            border-bottom: 1px solid {DS.BORDER};
+border-bottom: 1px solid {DS.BORDER};
 
-            height: 64px;
+height: 64px;
 
-            position: fixed;
+position: fixed;
 
-            top: 0;
+top: 0;
 
-            left: 0;
+left: 0;
 
-            right: 0;
+right: 0;
 
-            z-index: 1000;
+z-index: 1000;
 
-            backdrop-filter: blur(8px);
+backdrop-filter: blur(8px);
 
-            background: rgba(255, 255, 255, 0.95);
+background: rgba(255, 255, 255, 0.95);
 
-        '''):
+'''):
 
-            # Left: Branding + Breadcrumb
+# Left: Branding + Breadcrumb
 
-            with ui.row().classes('items-center').style(f'gap: {DS.SPACING_XL}; height: 64px;'):
+with ui.row().classes('items-center').style(f'gap: {DS.SPACING_XL};'):
 
-                # Branding (sempre presente)
+# Branding (sempre presente)
 
-                branding = ui.row().classes('items-center cursor-pointer').style(f'gap: {DS.SPACING_MD}; height: 100%;')
+branding = ui.row().classes('items-center cursor-pointer').style(f'gap: {DS.SPACING_MD};')
 
-                with branding:
+with branding:
 
-                    with ui.column().classes('items-center justify-center').style(f'''
+with ui.column().classes('items-center justify-center').style(f'''
 
-                        width: 32px;
+width: 32px;
 
-                        height: 32px;
+height: 32px;
 
-                        background: linear-gradient(135deg, {DS.PRIMARY} 0%, {DS.PRIMARY_HOVER} 100%);
+background: linear-gradient(135deg, {DS.PRIMARY} 0%, {DS.PRIMARY_HOVER} 100%);
 
-                        border-radius: {DS.RADIUS_MD};
+border-radius: {DS.RADIUS_MD};
 
-                        box-shadow: {DS.SHADOW_XS};
+box-shadow: {DS.SHADOW_XS};
 
-                    '''):
+'''):
 
-                        ui.icon('analytics', size='18px', color='white')
+ui.icon('analytics', size='18px', color='white')
 
-                    ui.label('CX Data').classes('text-sm').style(f'''
+ui.label('CX Data').classes('text-sm').style(f'''
 
-                        color: {DS.TEXT_PRIMARY};
+color: {DS.TEXT_PRIMARY};
 
-                        font-weight: 700;
+font-weight: 700;
 
-                        letter-spacing: -0.01em;
+letter-spacing: -0.01em;
 
-                        line-height: 1;
+''')
 
-                    ''')
+branding.on('click', lambda: ui.navigate.to('/'))
 
-                branding.on('click', lambda: ui.navigate.to('/'))
 
-            
+# Separator
 
-                # Separator
+if breadcrumb:
 
-                if breadcrumb:
+ui.separator().classes('h-6').style(f'background: {DS.BORDER}; opacity: 0.5;')
 
-                    ui.separator().classes('h-6').style(f'background: {DS.BORDER}; opacity: 0.5;')
 
-            
+# Breadcrumb (contextual)
 
-                # Breadcrumb (contextual)
+with ui.row().classes('items-center').style(f'gap: {DS.SPACING_SM};'):
 
-                with ui.row().classes('items-center').style(f'gap: {DS.SPACING_SM}; height: 100%;'):
+for i, item in enumerate(breadcrumb):
 
-                    for i, item in enumerate(breadcrumb):
+is_last = i == len(breadcrumb) - 1
 
-                        is_last = i == len(breadcrumb) - 1
+label = ui.label(item['label']).classes('text-sm').style(f'''
 
-                        label = ui.label(item['label']).classes('text-sm').style(f'''
+color: {DS.TEXT_PRIMARY if is_last else DS.TEXT_SECONDARY};
 
-                            color: {DS.TEXT_PRIMARY if is_last else DS.TEXT_SECONDARY};
+font-weight: {600 if is_last else 500};
 
-                            font-weight: {600 if is_last else 500};
+transition: color {DS.TRANSITION_FAST};
 
-                            transition: color {DS.TRANSITION_FAST};
+cursor: {"default" if is_last or 'onClick' not in item else "pointer"};
 
-                            cursor: {"default" if is_last or 'onClick' not in item else "pointer"};
+''')
 
-                            line-height: 1;
+if 'onClick' in item and not is_last:
 
-                        ''')
+label.on('click', item['onClick'])
 
-                        if 'onClick' in item and not is_last:
+label.on('mouseenter', lambda e: e.sender.style(f'color: {DS.TEXT_PRIMARY};'))
 
-                            label.on('click', item['onClick'])
+label.on('mouseleave', lambda e: e.sender.style(f'color: {DS.TEXT_SECONDARY};'))
 
-                            label.on('mouseenter', lambda e: e.sender.style(f'color: {DS.TEXT_PRIMARY};'))
 
-                            label.on('mouseleave', lambda e: e.sender.style(f'color: {DS.TEXT_SECONDARY};'))
+if not is_last:
 
-                    
+ui.icon('chevron_right', size='16px').style(f'color: {DS.TEXT_DISABLED};')
 
-                        if not is_last:
 
-                            ui.icon('chevron_right', size='16px').style(f'color: {DS.TEXT_DISABLED};')
+# Right: User Menu Premium
 
-            
+with ui.row().classes('items-center').style(f'gap: {DS.SPACING_MD};'):
 
-            # Right: User Menu Premium
+# Avatar + Info
 
-            with ui.row().classes('items-center').style(f'gap: {DS.SPACING_MD}; height: 64px;'):
+user_menu = ui.row().classes('items-center cursor-pointer').style(f'''
 
-                # Avatar + Info
+gap: {DS.SPACING_MD};
 
-                user_menu = ui.row().classes('items-center cursor-pointer').style(f'''
+padding: {DS.SPACING_SM} {DS.SPACING_MD};
 
-                    gap: {DS.SPACING_MD};
+border-radius: {DS.RADIUS_MD};
 
-                    padding: {DS.SPACING_SM} {DS.SPACING_MD};
+transition: background {DS.TRANSITION_FAST};
 
-                    border-radius: {DS.RADIUS_MD};
+''')
 
-                    transition: background {DS.TRANSITION_FAST};
 
-                    height: 48px;
+with user_menu:
 
-                ''')
+# Info (name + email)
 
-            
+with ui.column().classes('items-end').style(f'gap: {DS.SPACING_XS};'):
 
-                with user_menu:
+ui.label(cliente_nome.split()[0]).classes('text-sm').style(f'''
 
-                    # Info (name + email)
+color: {DS.TEXT_PRIMARY};
 
-                    with ui.column().classes('items-end justify-center').style(f'gap: 2px; height: 100%;'):
+font-weight: 600;
 
-                        ui.label(cliente_nome.split()[0]).classes('text-sm').style(f'''
+line-height: 1;
 
-                            color: {DS.TEXT_PRIMARY};
+''')
 
-                            font-weight: 600;
+ui.label(user_email).classes('text-xs').style(f'''
 
-                            line-height: 1.2;
+color: {DS.TEXT_TERTIARY};
 
-                        ''')
+line-height: 1;
 
-                        ui.label(user_email).classes('text-xs').style(f'''
+''')
 
-                            color: {DS.TEXT_TERTIARY};
 
-                            line-height: 1.2;
+# Avatar
 
-                        ''')
+iniciais = ''.join([palavra[0].upper() for palavra in cliente_nome.split()[:2]])
 
-                
+with ui.column().classes('items-center justify-center').style(f'''
 
-                    # Avatar
+width: 36px;
 
-                    iniciais = ''.join([palavra[0].upper() for palavra in cliente_nome.split()[:2]])
+height: 36px;
 
-                    with ui.column().classes('items-center justify-center').style(f'''
+background: linear-gradient(135deg, {DS.PRIMARY_LIGHT} 0%, {DS.PRIMARY_ULTRA_LIGHT} 100%);
 
-                        width: 36px;
+border: 1.5px solid {DS.BORDER};
 
-                        height: 36px;
+border-radius: {DS.RADIUS_FULL};
 
-                        background: linear-gradient(135deg, {DS.PRIMARY_LIGHT} 0%, {DS.PRIMARY_ULTRA_LIGHT} 100%);
+color: {DS.PRIMARY};
 
-                        border: 1.5px solid {DS.BORDER};
+font-size: 12px;
 
-                        border-radius: {DS.RADIUS_FULL};
+font-weight: 700;
 
-                        color: {DS.PRIMARY};
+'''):
 
-                        font-size: 12px;
+ui.label(iniciais)
 
-                        font-weight: 700;
 
-                        flex-shrink: 0;
+# Dropdown icon
 
-                    '''):
+ui.icon('expand_more', size='18px').style(f'color: {DS.TEXT_TERTIARY};')
 
-                        ui.label(iniciais)
 
-                
+# Hover effect
 
-                    # Dropdown icon
+user_menu.on('mouseenter', lambda e: e.sender.style(f'background: {DS.SURFACE_HOVER};'))
 
-                    ui.icon('expand_more', size='18px').style(f'color: {DS.TEXT_TERTIARY};')
+user_menu.on('mouseleave', lambda e: e.sender.style(f'background: transparent;'))
 
-            
 
-                # Hover effect
+# Menu dropdown (via NiceGUI menu)
 
-                user_menu.on('mouseenter', lambda e: e.sender.style(f'background: {DS.SURFACE_HOVER};'))
+with user_menu:
 
-                user_menu.on('mouseleave', lambda e: e.sender.style(f'background: transparent;'))
+with ui.menu().props('offset-y').style(f'''
 
-            
+background: {DS.SURFACE_ELEVATED};
 
-                # Menu dropdown (via NiceGUI menu)
+border: 1px solid {DS.BORDER};
 
-                with user_menu:
+border-radius: {DS.RADIUS_LG};
 
-                    with ui.menu().props('offset-y').style(f'''
+box-shadow: {DS.SHADOW_LG};
 
-                        background: {DS.SURFACE_ELEVATED};
+padding: {DS.SPACING_SM};
 
-                        border: 1px solid {DS.BORDER};
+min-width: 200px;
 
-                        border-radius: {DS.RADIUS_LG};
+'''):
 
-                        box-shadow: {DS.SHADOW_LG};
+# Menu items
 
-                        padding: {DS.SPACING_SM};
+with ui.column().classes('w-full').style(f'gap: {DS.SPACING_XS};'):
 
-                        min-width: 200px;
+# Settings (disabled visually)
 
-                    '''):
+settings_item = ui.row().classes('w-full items-center cursor-not-allowed').style(f'''
 
-                        # Menu items
+gap: {DS.SPACING_MD};
 
-                        with ui.column().classes('w-full').style(f'gap: {DS.SPACING_XS};'):
+padding: {DS.SPACING_SM} {DS.SPACING_MD};
 
-                            # Settings (disabled visually)
+border-radius: {DS.RADIUS_SM};
 
-                            settings_item = ui.row().classes('w-full items-center cursor-not-allowed').style(f'''
+opacity: 0.5;
 
-                                gap: {DS.SPACING_MD};
+''')
 
-                                padding: {DS.SPACING_SM} {DS.SPACING_MD};
+with settings_item:
 
-                                border-radius: {DS.RADIUS_SM};
+ui.icon('settings', size='18px').style(f'color: {DS.TEXT_TERTIARY};')
 
-                                opacity: 0.5;
+ui.label('Configurações').classes('text-sm').style(f'color: {DS.TEXT_SECONDARY};')
 
-                            ''')
 
-                            with settings_item:
+ui.separator().style(f'background: {DS.BORDER}; margin: {DS.SPACING_SM} 0;')
 
-                                ui.icon('settings', size='18px').style(f'color: {DS.TEXT_TERTIARY};')
 
-                                ui.label('Configurações').classes('text-sm').style(f'color: {DS.TEXT_SECONDARY};')
+# Logout
 
-                        
+def logout_action():
 
-                            ui.separator().style(f'background: {DS.BORDER}; margin: {DS.SPACING_SM} 0;')
+state = app.storage.user.get('state')
 
-                        
+if state:
 
-                            # Logout
+state.logout()
 
-                            def logout_action():
+app.storage.user['state'] = state
 
-                                state = app.storage.user.get('state')
+ui.navigate.to('/login')
 
-                                if state:
 
-                                    state.logout()
+logout_item = ui.row().classes('w-full items-center cursor-pointer').style(f'''
 
-                                    app.storage.user['state'] = state
+gap: {DS.SPACING_MD};
 
-                                ui.navigate.to('/login')
+padding: {DS.SPACING_SM} {DS.SPACING_MD};
 
-                        
+border-radius: {DS.RADIUS_SM};
 
-                            logout_item = ui.row().classes('w-full items-center cursor-pointer').style(f'''
+transition: background {DS.TRANSITION_FAST};
 
-                                gap: {DS.SPACING_MD};
+''')
 
-                                padding: {DS.SPACING_SM} {DS.SPACING_MD};
+with logout_item:
 
-                                border-radius: {DS.RADIUS_SM};
+ui.icon('logout', size='18px').style(f'color: {DS.TEXT_SECONDARY};')
 
-                                transition: background {DS.TRANSITION_FAST};
+ui.label('Sair').classes('text-sm').style(f'color: {DS.TEXT_SECONDARY}; font-weight: 500;')
 
-                            ''')
 
-                            with logout_item:
+logout_item.on('click', logout_action)
 
-                                ui.icon('logout', size='18px').style(f'color: {DS.TEXT_SECONDARY};')
+logout_item.on('mouseenter', lambda e: e.sender.style(f'background: {DS.SURFACE_HOVER};'))
 
-                                ui.label('Sair').classes('text-sm').style(f'color: {DS.TEXT_SECONDARY}; font-weight: 500;')
-
-                        
-
-                            logout_item.on('click', logout_action)
-
-                            logout_item.on('mouseenter', lambda e: e.sender.style(f'background: {DS.SURFACE_HOVER};'))
-
-                            logout_item.on('mouseleave', lambda e: e.sender.style(f'background: transparent;'))
+logout_item.on('mouseleave', lambda e: e.sender.style(f'background: transparent;'))
 
 
 
@@ -636,223 +602,165 @@ class TopbarNavigation:
 
 class UIComponents:
 
-    @staticmethod
+@staticmethod
 
-    def input_field(label: str, password: bool = False, placeholder: str = '', icon: Optional[str] = None):
+def input_field(label: str, password: bool = False, placeholder: str = '', icon: Optional[str] = None):
 
-        with ui.column().classes('w-full').style(f'gap: {DS.SPACING_SM};'):
+with ui.column().classes('w-full').style(f'gap: {DS.SPACING_SM};'):
 
-            ui.label(label).classes('text-sm').style(f'''
+ui.label(label).classes('text-sm').style(f'''
 
-                color: {DS.TEXT_SECONDARY};
+color: {DS.TEXT_SECONDARY};
 
-                font-weight: 500;
+font-weight: 500;
 
-            ''')
+''')
 
-            with ui.row().classes('w-full items-center relative'):
+with ui.row().classes('w-full items-center relative'):
 
-                if icon:
+if icon:
 
-                    ui.icon(icon, size='18px').classes('absolute z-10').style(f'''
+ui.icon(icon, size='18px').classes('absolute z-10').style(f'''
 
-                        left: 14px;
+left: 14px;
 
-                        top: 50%;
+color: {DS.TEXT_TERTIARY};
 
-                        transform: translateY(-50%);
+pointer-events: none;
 
-                        color: {DS.TEXT_TERTIARY};
+''')
 
-                        pointer-events: none;
+input_elem = ui.input(placeholder=placeholder, password=password).classes('w-full').props('outlined borderless').style(f'''
 
-                    ''')
+background: {DS.SURFACE};
 
-                input_elem = ui.input(placeholder=placeholder, password=password).classes('w-full').props('outlined borderless').style(f'''
+border: 1.5px solid {DS.BORDER};
 
-                    background: {DS.SURFACE};
+border-radius: {DS.RADIUS_MD};
 
-                    border: 1.5px solid {DS.BORDER};
+padding-left: {"44px" if icon else "14px"};
 
-                    border-radius: {DS.RADIUS_MD};
+transition: all {DS.TRANSITION_FAST};
 
-                    padding-left: {"44px" if icon else "14px"};
+height: 44px;
 
-                    padding-right: {"44px" if password else "14px"};
+font-size: 14px;
 
-                    transition: all {DS.TRANSITION_FAST};
+''')
 
-                    height: 44px;
+input_elem.on('focus', lambda e: e.sender.style(f'''
 
-                    font-size: 14px;
+border-color: {DS.BORDER_FOCUS};
 
-                    line-height: 44px;
+box-shadow: {DS.SHADOW_FOCUS};
 
-                ''')
+'''))
 
-                input_elem.on('focus', lambda e: e.sender.style(f'''
+input_elem.on('blur', lambda e: e.sender.style(f'''
 
-                    border-color: {DS.BORDER_FOCUS};
+border-color: {DS.BORDER};
 
-                    box-shadow: {DS.SHADOW_FOCUS};
+box-shadow: none;
 
-                '''))
+'''))
 
-                input_elem.on('blur', lambda e: e.sender.style(f'''
+return input_elem
 
-                    border-color: {DS.BORDER};
 
-                    box-shadow: none;
 
-                '''))
+@staticmethod
 
-                
+def primary_button(text: str, on_click=None, full_width: bool = False, icon: Optional[str] = None):
 
-                if password:
+btn = ui.button(text, on_click=on_click).props('no-caps flat').style(f'''
 
-                    toggle_icon = ui.icon('visibility_off', size='18px').classes('absolute z-10 cursor-pointer').style(f'''
+background: {DS.PRIMARY};
 
-                        right: 14px;
+color: {DS.TEXT_INVERSE};
 
-                        top: 50%;
+border-radius: {DS.RADIUS_MD};
 
-                        transform: translateY(-50%);
+padding: 0 20px;
 
-                        color: {DS.TEXT_TERTIARY};
+font-weight: 600;
 
-                        transition: color {DS.TRANSITION_FAST};
+font-size: 14px;
 
-                    ''')
+height: 44px;
 
-                    
+box-shadow: {DS.SHADOW_XS};
 
-                    def toggle_visibility():
+transition: all {DS.TRANSITION_FAST};
 
-                        if input_elem.props('type') == 'password':
+{"width: 100%;" if full_width else ""}
 
-                            input_elem.props(remove='type=password')
+''')
 
-                            toggle_icon.name = 'visibility'
+if icon: btn.props(f'icon={icon}')
 
-                        else:
+btn.on('mouseenter', lambda e: e.sender.style(f'background: {DS.PRIMARY_HOVER}; box-shadow: {DS.SHADOW_SM};'))
 
-                            input_elem.props('type=password')
+btn.on('mouseleave', lambda e: e.sender.style(f'background: {DS.PRIMARY}; box-shadow: {DS.SHADOW_XS};'))
 
-                            toggle_icon.name = 'visibility_off'
+return btn
 
-                    
 
-                    toggle_icon.on('click', toggle_visibility)
 
-                    toggle_icon.on('mouseenter', lambda e: e.sender.style(f'color: {DS.TEXT_PRIMARY};'))
+@staticmethod
 
-                    toggle_icon.on('mouseleave', lambda e: e.sender.style(f'color: {DS.TEXT_TERTIARY};'))
+def ghost_button(text: str, on_click=None, icon: Optional[str] = None):
 
-                
+btn = ui.button(text, on_click=on_click).props('no-caps flat').style(f'''
 
-                return input_elem
+background: transparent;
 
-    
+color: {DS.TEXT_SECONDARY};
 
-    
+border: 1.5px solid {DS.BORDER};
 
-    @staticmethod
+border-radius: {DS.RADIUS_MD};
 
-    def primary_button(text: str, on_click=None, full_width: bool = False, icon: Optional[str] = None):
+padding: 0 16px;
 
-        btn = ui.button(text, on_click=on_click).props('no-caps flat').style(f'''
+height: 36px;
 
-            background: {DS.PRIMARY};
+font-weight: 500;
 
-            color: {DS.TEXT_INVERSE};
+font-size: 13px;
 
-            border-radius: {DS.RADIUS_MD};
+transition: all {DS.TRANSITION_FAST};
 
-            padding: 0 20px;
+''')
 
-            font-weight: 600;
+if icon: btn.props(f'icon={icon}')
 
-            font-size: 14px;
+btn.on('mouseenter', lambda e: e.sender.style(f'background: {DS.SURFACE_HOVER}; border-color: {DS.BORDER_HOVER}; color: {DS.TEXT_PRIMARY};'))
 
-            height: 44px;
+btn.on('mouseleave', lambda e: e.sender.style(f'background: transparent; border-color: {DS.BORDER}; color: {DS.TEXT_SECONDARY};'))
 
-            box-shadow: {DS.SHADOW_XS};
+return btn
 
-            transition: all {DS.TRANSITION_FAST};
 
-            {"width: 100%;" if full_width else ""}
 
-        ''')
+@staticmethod
 
-        if icon: btn.props(f'icon={icon}')
+def icon_button(icon: str, on_click=None, tooltip: str = ''):
 
-        btn.on('mouseenter', lambda e: e.sender.style(f'background: {DS.PRIMARY_HOVER}; box-shadow: {DS.SHADOW_SM};'))
+btn = ui.button(icon=icon, on_click=on_click).props('flat round dense').style(f'''
 
-        btn.on('mouseleave', lambda e: e.sender.style(f'background: {DS.PRIMARY}; box-shadow: {DS.SHADOW_XS};'))
+color: {DS.TEXT_SECONDARY};
 
-        return btn
+transition: all {DS.TRANSITION_FAST};
 
-    
+''')
 
-    
+if tooltip: btn.tooltip(tooltip)
 
-    @staticmethod
+btn.on('mouseenter', lambda e: e.sender.style(f'background: {DS.SURFACE_HOVER}; color: {DS.TEXT_PRIMARY};'))
 
-    def ghost_button(text: str, on_click=None, icon: Optional[str] = None):
+btn.on('mouseleave', lambda e: e.sender.style(f'background: transparent; color: {DS.TEXT_SECONDARY};'))
 
-        btn = ui.button(text, on_click=on_click).props('no-caps flat').style(f'''
-
-            background: transparent;
-
-            color: {DS.TEXT_SECONDARY};
-
-            border: 1.5px solid {DS.BORDER};
-
-            border-radius: {DS.RADIUS_MD};
-
-            padding: 0 16px;
-
-            height: 36px;
-
-            font-weight: 500;
-
-            font-size: 13px;
-
-            transition: all {DS.TRANSITION_FAST};
-
-        ''')
-
-        if icon: btn.props(f'icon={icon}')
-
-        btn.on('mouseenter', lambda e: e.sender.style(f'background: {DS.SURFACE_HOVER}; border-color: {DS.BORDER_HOVER}; color: {DS.TEXT_PRIMARY};'))
-
-        btn.on('mouseleave', lambda e: e.sender.style(f'background: transparent; border-color: {DS.BORDER}; color: {DS.TEXT_SECONDARY};'))
-
-        return btn
-
-    
-
-    
-
-    @staticmethod
-
-    def icon_button(icon: str, on_click=None, tooltip: str = ''):
-
-        btn = ui.button(icon=icon, on_click=on_click).props('flat round dense').style(f'''
-
-            color: {DS.TEXT_SECONDARY};
-
-            transition: all {DS.TRANSITION_FAST};
-
-        ''')
-
-        if tooltip: btn.tooltip(tooltip)
-
-        btn.on('mouseenter', lambda e: e.sender.style(f'background: {DS.SURFACE_HOVER}; color: {DS.TEXT_PRIMARY};'))
-
-        btn.on('mouseleave', lambda e: e.sender.style(f'background: transparent; color: {DS.TEXT_SECONDARY};'))
-
-        return btn
+return btn
 
 
 
@@ -866,41 +774,41 @@ class UIComponents:
 
 class SkeletonLoader:
 
-    @staticmethod
+@staticmethod
 
-    def create(height: str = '100%'):
+def create(height: str = '100%'):
 
-        ui.html(f'''
+ui.html(f'''
 
-            <div style="
+<div style="
 
-                width: 100%;
+width: 100%;
 
-                height: {height};
+height: {height};
 
-                background: linear-gradient(90deg, {DS.SURFACE_100} 0%, {DS.SURFACE_200} 50%, {DS.SURFACE_100} 100%);
+background: linear-gradient(90deg, {DS.SURFACE_100} 0%, {DS.SURFACE_200} 50%, {DS.SURFACE_100} 100%);
 
-                background-size: 200% 100%;
+background-size: 200% 100%;
 
-                animation: shimmer 1.8s ease-in-out infinite;
+animation: shimmer 1.8s ease-in-out infinite;
 
-                border-radius: {DS.RADIUS_LG};
+border-radius: {DS.RADIUS_LG};
 
-            "></div>
+"></div>
 
-            <style>
+<style>
 
-                @keyframes shimmer {{
+@keyframes shimmer {{
 
-                    0% {{ background-position: -200% 0; }}
+0% {{ background-position: -200% 0; }}
 
-                    100% {{ background-position: 200% 0; }}
+100% {{ background-position: 200% 0; }}
 
-                }}
+}}
 
-            </style>
+</style>
 
-        ''', sanitize=False)
+''', sanitize=False)
 
 
 
@@ -916,13 +824,13 @@ DATABASE_URL = os.getenv('DATABASE_URL')
 
 if not DATABASE_URL:
 
-    print("AVISO: DATABASE_URL não encontrada.")
+print("AVISO: DATABASE_URL não encontrada.")
 
-    DATABASE_URL = "sqlite:///exemplo.db"
+DATABASE_URL = "sqlite:///exemplo.db"
 
 if DATABASE_URL.startswith("postgres://"):
 
-    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
 
 
@@ -944,67 +852,67 @@ Base = declarative_base()
 
 class Cliente(Base):
 
-    __tablename__ = 'clientes'
+__tablename__ = 'clientes'
 
-    id = Column(Integer, primary_key=True)
+id = Column(Integer, primary_key=True)
 
-    nome = Column(String(200), nullable=False)
+nome = Column(String(200), nullable=False)
 
-    users = relationship('User', back_populates='cliente')
+users = relationship('User', back_populates='cliente')
 
-    dashboards = relationship('Dashboard', back_populates='cliente')
+dashboards = relationship('Dashboard', back_populates='cliente')
 
 
 
 class User(Base):
 
-    __tablename__ = 'users'
+__tablename__ = 'users'
 
-    id = Column(Integer, primary_key=True)
+id = Column(Integer, primary_key=True)
 
-    email = Column(String(200), unique=True, nullable=False)
+email = Column(String(200), unique=True, nullable=False)
 
-    password_hash = Column(String(64), nullable=False)
+password_hash = Column(String(64), nullable=False)
 
-    cliente_id = Column(Integer, ForeignKey('clientes.id'), nullable=False)
+cliente_id = Column(Integer, ForeignKey('clientes.id'), nullable=False)
 
-    perfil = Column(String(50), nullable=False)
+perfil = Column(String(50), nullable=False)
 
-    cliente = relationship('Cliente', back_populates='users')
+cliente = relationship('Cliente', back_populates='users')
 
 
 
 class Dashboard(Base):
 
-    __tablename__ = 'dashboards'
+__tablename__ = 'dashboards'
 
-    id = Column(Integer, primary_key=True)
+id = Column(Integer, primary_key=True)
 
-    cliente_id = Column(Integer, ForeignKey('clientes.id'), nullable=False)
+cliente_id = Column(Integer, ForeignKey('clientes.id'), nullable=False)
 
-    nome = Column(String(200), nullable=False)
+nome = Column(String(200), nullable=False)
 
-    tipo = Column(String(50), nullable=False)
+tipo = Column(String(50), nullable=False)
 
-    link_embed = Column(Text, nullable=False)
+link_embed = Column(Text, nullable=False)
 
-    cliente = relationship('Cliente', back_populates='dashboards')
+cliente = relationship('Cliente', back_populates='dashboards')
 
-    permissoes = relationship('DashboardPermissao', back_populates='dashboard')
+permissoes = relationship('DashboardPermissao', back_populates='dashboard')
 
 
 
 class DashboardPermissao(Base):
 
-    __tablename__ = 'dashboard_permissoes'
+__tablename__ = 'dashboard_permissoes'
 
-    id = Column(Integer, primary_key=True)
+id = Column(Integer, primary_key=True)
 
-    dashboard_id = Column(Integer, ForeignKey('dashboards.id'), nullable=False)
+dashboard_id = Column(Integer, ForeignKey('dashboards.id'), nullable=False)
 
-    perfil = Column(String(50), nullable=False)
+perfil = Column(String(50), nullable=False)
 
-    dashboard = relationship('Dashboard', back_populates='permissoes')
+dashboard = relationship('Dashboard', back_populates='permissoes')
 
 
 
@@ -1018,51 +926,51 @@ class DashboardPermissao(Base):
 
 def hash_password(password: str) -> str:
 
-    return hashlib.sha256(password.encode()).hexdigest()
+return hashlib.sha256(password.encode()).hexdigest()
 
 
 
 def autenticar_usuario(email: str, password: str) -> Optional[User]:
 
-    db = SessionLocal()
+db = SessionLocal()
 
-    try:
+try:
 
-        return db.query(User).filter(User.email == email, User.password_hash == hash_password(password)).first()
+return db.query(User).filter(User.email == email, User.password_hash == hash_password(password)).first()
 
-    finally: db.close()
+finally: db.close()
 
 
 
 def obter_dashboards_autorizados(cliente_id: int, perfil: str) -> List[Dashboard]:
 
-    db = SessionLocal()
+db = SessionLocal()
 
-    try:
+try:
 
-        return db.query(Dashboard).join(DashboardPermissao).filter(Dashboard.cliente_id == cliente_id, DashboardPermissao.perfil == perfil).distinct().all()
+return db.query(Dashboard).join(DashboardPermissao).filter(Dashboard.cliente_id == cliente_id, DashboardPermissao.perfil == perfil).distinct().all()
 
-    finally: db.close()
+finally: db.close()
 
 
 
 class AppState:
 
-    def __init__(self): self.user_email: Optional[str] = None
+def __init__(self): self.user_email: Optional[str] = None
 
-    def login(self, user: User): self.user_email = user.email
+def login(self, user: User): self.user_email = user.email
 
-    def logout(self): self.user_email = None
+def logout(self): self.user_email = None
 
-    def get_user_completo(self) -> Optional[User]:
+def get_user_completo(self) -> Optional[User]:
 
-        if not self.user_email: return None
+if not self.user_email: return None
 
-        db = SessionLocal()
+db = SessionLocal()
 
-        try: return db.query(User).filter(User.email == self.user_email).first()
+try: return db.query(User).filter(User.email == self.user_email).first()
 
-        finally: db.close()
+finally: db.close()
 
 
 
@@ -1078,161 +986,155 @@ class AppState:
 
 def page_login():
 
-    state = app.storage.user.get('state', AppState())
+state = app.storage.user.get('state', AppState())
 
-    if state.user_email: ui.navigate.to('/'); return
+if state.user_email: ui.navigate.to('/'); return
 
-    
 
-    with ui.column().classes('w-full h-screen items-center justify-center').style(f'''
 
-        background: linear-gradient(135deg, {DS.SURFACE_50} 0%, {DS.PRIMARY_ULTRA_LIGHT} 100%);
+with ui.column().classes('w-full h-screen items-center justify-center').style(f'''
 
-    '''):
+background: linear-gradient(135deg, {DS.SURFACE_50} 0%, {DS.PRIMARY_ULTRA_LIGHT} 100%);
 
-        # Subtle grid pattern
+'''):
 
-        ui.html(f'''
+# Subtle grid pattern
 
-            <div style="
+ui.html(f'''
 
-                position: absolute;
+<div style="
 
-                top: 0;
+position: absolute;
 
-                left: 0;
+top: 0;
 
-                right: 0;
+left: 0;
 
-                bottom: 0;
+right: 0;
 
-                background-image:
+bottom: 0;
 
-                    linear-gradient(to right, {DS.BORDER_LIGHT} 1px, transparent 1px),
+background-image:
 
-                    linear-gradient(to bottom, {DS.BORDER_LIGHT} 1px, transparent 1px);
+linear-gradient(to right, {DS.BORDER_LIGHT} 1px, transparent 1px),
 
-                background-size: 32px 32px;
+linear-gradient(to bottom, {DS.BORDER_LIGHT} 1px, transparent 1px);
 
-                pointer-events: none;
+background-size: 32px 32px;
 
-                opacity: 0.4;
+pointer-events: none;
 
-            "></div>
+opacity: 0.4;
 
-        ''', sanitize=False)
+"></div>
 
-        
+''', sanitize=False)
 
-        with ui.column().classes('w-full max-w-md px-8 relative z-10').style(f'gap: {DS.SPACING_2XL};'):
 
-            # Branding
+with ui.column().classes('w-full max-w-md px-8 relative z-10').style(f'gap: {DS.SPACING_2XL};'):
 
-            with ui.column().classes('items-center').style(f'gap: {DS.SPACING_MD};'):
+# Branding
 
-                with ui.column().classes('items-center justify-center').style(f'''
+with ui.column().classes('items-center').style(f'gap: {DS.SPACING_MD};'):
 
-                    width: 48px;
+with ui.column().classes('items-center justify-center').style(f'''
 
-                    height: 48px;
+width: 48px;
 
-                    background: {DS.PRIMARY};
+height: 48px;
 
-                    border-radius: {DS.RADIUS_LG};
+background: {DS.PRIMARY};
 
-                    box-shadow: {DS.SHADOW_MD};
+border-radius: {DS.RADIUS_LG};
 
-                '''):
+box-shadow: {DS.SHADOW_MD};
 
-                    ui.icon('analytics', size='24px', color='white')
+'''):
 
-                ui.label('CX Data').classes('text-2xl').style(f'''
+ui.icon('analytics', size='24px', color='white')
 
-                    color: {DS.TEXT_PRIMARY};
+ui.label('CX Data').classes('text-2xl').style(f'''
 
-                    font-weight: 700;
+color: {DS.TEXT_PRIMARY};
 
-                    letter-spacing: -0.02em;
+font-weight: 700;
 
-                ''')
+letter-spacing: -0.02em;
 
-                ui.label('Analytics Platform').classes('text-xs').style(f'''
+''')
 
-                    color: {DS.TEXT_TERTIARY};
+ui.label('Analytics Platform').classes('text-xs').style(f'''
 
-                    font-weight: 500;
+color: {DS.TEXT_TERTIARY};
 
-                    letter-spacing: 0.05em;
+font-weight: 500;
 
-                    text-transform: uppercase;
+letter-spacing: 0.05em;
 
-                ''')
+text-transform: uppercase;
 
-            
+''')
 
-            # Login Card
 
-            with ui.column().classes('w-full').style(f'''
+# Login Card
 
-                gap: {DS.SPACING_XL};
+with ui.column().classes('w-full').style(f'''
 
-                background: {DS.SURFACE_ELEVATED};
+gap: {DS.SPACING_XL};
 
-                border: 1px solid {DS.BORDER_LIGHT};
+background: {DS.SURFACE_ELEVATED};
 
-                border-radius: {DS.RADIUS_XL};
+border: 1px solid {DS.BORDER_LIGHT};
 
-                padding: {DS.SPACING_3XL};
+border-radius: {DS.RADIUS_XL};
 
-                box-shadow: {DS.SHADOW_LG};
+padding: {DS.SPACING_3XL};
 
-            '''):
+box-shadow: {DS.SHADOW_LG};
 
-                ui.label('Acesse sua conta').classes('text-lg').style(f'''
+'''):
 
-                    color: {DS.TEXT_PRIMARY};
+ui.label('Acesse sua conta').classes('text-lg').style(f'''
 
-                    font-weight: 600;
+color: {DS.TEXT_PRIMARY};
 
-                    letter-spacing: -0.01em;
+font-weight: 600;
 
-                ''')
+letter-spacing: -0.01em;
 
-            
+''')
 
-                email = UIComponents.input_field('Email', icon='mail', placeholder='seu@email.com')
 
-                senha = UIComponents.input_field('Senha', password=True, icon='lock', placeholder='••••••••')
+email = UIComponents.input_field('Email', icon='mail', placeholder='seu@email.com')
 
-            
+senha = UIComponents.input_field('Senha', password=True, icon='lock', placeholder='••••••••')
 
-                erro_label = ui.label('').classes('text-sm hidden').style(f'color: #dc2626;')
 
-            
+erro_label = ui.label('').classes('text-sm hidden').style(f'color: #dc2626;')
 
-                def try_login():
 
-                    user = autenticar_usuario(email.value.strip(), senha.value)
+def try_login():
 
-                    if user:
+user = autenticar_usuario(email.value.strip(), senha.value)
 
-                        state.login(user)
+if user:
 
-                        app.storage.user['state'] = state
+state.login(user)
 
-                        ui.navigate.to('/')
+app.storage.user['state'] = state
 
-                    else:
+ui.navigate.to('/')
 
-                        erro_label.text = 'Credenciais inválidas. Verifique e tente novamente.'
+else:
 
-                        erro_label.classes(remove='hidden')
+erro_label.text = 'Credenciais inválidas. Verifique e tente novamente.'
 
-            
+erro_label.classes(remove='hidden')
 
-                UIComponents.primary_button('Acessar plataforma', on_click=try_login, full_width=True, icon='arrow_forward')
 
-                senha.on('keydown.enter', try_login)
+UIComponents.primary_button('Acessar plataforma', on_click=try_login, full_width=True, icon='arrow_forward')
+
+senha.on('keydown.enter', try_login)
 
 
 
@@ -1240,291 +1142,283 @@ def page_login():
 
 def page_home():
 
-    state = app.storage.user.get('state', AppState())
+state = app.storage.user.get('state', AppState())
 
-    if not state or not state.user_email: ui.navigate.to('/login'); return
+if not state or not state.user_email: ui.navigate.to('/login'); return
 
-    user = state.get_user_completo()
+user = state.get_user_completo()
 
-    if not user: state.logout(); ui.navigate.to('/login'); return
+if not user: state.logout(); ui.navigate.to('/login'); return
 
-    
 
-    db = SessionLocal()
+db = SessionLocal()
 
-    cliente = db.query(Cliente).filter(Cliente.id == user.cliente_id).first()
+cliente = db.query(Cliente).filter(Cliente.id == user.cliente_id).first()
 
-    dashboards = obter_dashboards_autorizados(user.cliente_id, user.perfil)
+dashboards = obter_dashboards_autorizados(user.cliente_id, user.perfil)
 
-    db.close()
+db.close()
 
-    
 
-    with ui.column().classes('w-full h-screen').style(f'''
 
-        background: {DS.SURFACE_50};
+with ui.column().classes('w-full h-screen').style(f'''
 
-        margin: 0;
+background: {DS.SURFACE_50};
 
-        padding: 0;
+margin: 0;
 
-        font-family: {DS.FONT};
+padding: 0;
 
-    '''):
+font-family: {DS.FONT};
 
-        # Topbar Navigation
+'''):
 
-        TopbarNavigation.create(
+# Topbar Navigation
 
-            cliente_nome=cliente.nome,
+TopbarNavigation.create(
 
-            user_email=user.email,
+cliente_nome=cliente.nome,
 
-            current_page='home'
+user_email=user.email,
 
-        )
+current_page='home'
 
-        
+)
 
-        # Main Content (com padding-top para compensar topbar fixa)
 
-        with ui.column().classes('w-full').style(f'''
+# Main Content (com padding-top para compensar topbar fixa)
 
-            padding-top: 64px;
+with ui.column().classes('w-full').style(f'''
 
-            min-height: 100vh;
+padding-top: 64px;
 
-        '''):
+min-height: 100vh;
 
-            # Page Header
+'''):
 
-            with ui.column().classes('w-full').style(f'''
+# Page Header
 
-                padding: {DS.SPACING_3XL} {DS.SPACING_2XL} {DS.SPACING_XL} {DS.SPACING_2XL};
+with ui.column().classes('w-full').style(f'''
 
-                background: {DS.SURFACE};
+padding: {DS.SPACING_3XL} {DS.SPACING_2XL} {DS.SPACING_XL} {DS.SPACING_2XL};
 
-                border-bottom: 1px solid {DS.BORDER_LIGHT};
+background: {DS.SURFACE};
 
-            '''):
+border-bottom: 1px solid {DS.BORDER_LIGHT};
 
-                with LayoutComponents.page_container(padding='0'):
+'''):
 
-                    with ui.column().style(f'gap: {DS.SPACING_SM};'):
+with LayoutComponents.page_container(padding='0'):
 
-                        ui.label('Seus Workspaces').classes('text-2xl').style(f'''
+with ui.column().style(f'gap: {DS.SPACING_SM};'):
 
-                            color: {DS.TEXT_PRIMARY};
+ui.label('Seus Workspaces').classes('text-2xl').style(f'''
 
-                            font-weight: 700;
+color: {DS.TEXT_PRIMARY};
 
-                            letter-spacing: -0.02em;
+font-weight: 700;
 
-                        ''')
+letter-spacing: -0.02em;
 
-                        ui.label(f'Bem-vindo de volta, {cliente.nome.split()[0]}').classes('text-sm').style(f'''
+''')
 
-                            color: {DS.TEXT_SECONDARY};
+ui.label(f'Bem-vindo de volta, {cliente.nome.split()[0]}').classes('text-sm').style(f'''
 
-                        ''')
+color: {DS.TEXT_SECONDARY};
 
-            
+''')
 
-            # Workspace Grid
 
-            with LayoutComponents.page_container(padding=f'{DS.SPACING_2XL}'):
+# Workspace Grid
 
-                if dashboards:
+with LayoutComponents.page_container(padding=f'{DS.SPACING_2XL}'):
 
-                    # Section Header
+if dashboards:
 
-                    with ui.row().classes('w-full items-center justify-between').style(f'margin-bottom: {DS.SPACING_XL};'):
+# Section Header
 
-                        ui.label('Todos os workspaces').classes('text-sm').style(f'''
+with ui.row().classes('w-full items-center justify-between').style(f'margin-bottom: {DS.SPACING_XL};'):
 
-                            color: {DS.TEXT_PRIMARY};
+ui.label('Todos os workspaces').classes('text-sm').style(f'''
 
-                            font-weight: 600;
+color: {DS.TEXT_PRIMARY};
 
-                        ''')
+font-weight: 600;
 
-                        ui.label(f'{len(dashboards)} {"workspace" if len(dashboards) == 1 else "workspaces"}').classes('text-xs').style(f'''
+''')
 
-                            color: {DS.TEXT_TERTIARY};
+ui.label(f'{len(dashboards)} {"workspace" if len(dashboards) == 1 else "workspaces"}').classes('text-xs').style(f'''
 
-                            background: {DS.SURFACE_100};
+color: {DS.TEXT_TERTIARY};
 
-                            padding: 4px 12px;
+background: {DS.SURFACE_100};
 
-                            border-radius: {DS.RADIUS_FULL};
+padding: 4px 12px;
 
-                            font-weight: 500;
+border-radius: {DS.RADIUS_FULL};
 
-                        ''')
+font-weight: 500;
 
-                    
+''')
 
-                    # Cards Grid
 
-                    with ui.grid(columns='repeat(auto-fill, minmax(340px, 1fr))').classes('w-full').style(f'gap: {DS.SPACING_XL};'):
 
-                        for idx, dash in enumerate(dashboards):
+# Cards Grid
 
-                            card = ui.column().classes('cursor-pointer').style(f'''
+with ui.grid(columns='repeat(auto-fill, minmax(340px, 1fr))').classes('w-full').style(f'gap: {DS.SPACING_XL};'):
 
-                                background: {DS.SURFACE_ELEVATED};
+for idx, dash in enumerate(dashboards):
 
-                                border: 1px solid {DS.BORDER};
+card = ui.column().classes('cursor-pointer').style(f'''
 
-                                border-radius: {DS.RADIUS_LG};
+background: {DS.SURFACE_ELEVATED};
 
-                                overflow: hidden;
+border: 1px solid {DS.BORDER};
 
-                                transition: all {DS.TRANSITION_BASE};
+border-radius: {DS.RADIUS_LG};
 
-                                box-shadow: {DS.SHADOW_SM};
+overflow: hidden;
 
-                                animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+transition: all {DS.TRANSITION_BASE};
 
-                                animation-delay: {idx * 0.04}s;
+box-shadow: {DS.SHADOW_SM};
 
-                                opacity: 0;
+animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 
-                            ''')
+animation-delay: {idx * 0.04}s;
 
-                        
+opacity: 0;
 
-                            with card:
+''')
 
-                                # Card Header
 
-                                with ui.row().classes('items-start justify-between w-full').style(f'padding: {DS.SPACING_XL};'):
+with card:
 
-                                    # Icon
+# Card Header
 
-                                    with ui.column().classes('items-center justify-center').style(f'''
+with ui.row().classes('items-start justify-between w-full').style(f'padding: {DS.SPACING_XL};'):
 
-                                        width: 44px;
+# Icon
 
-                                        height: 44px;
+with ui.column().classes('items-center justify-center').style(f'''
 
-                                        background: {DS.PRIMARY_ULTRA_LIGHT};
+width: 44px;
 
-                                        border: 1px solid {DS.BORDER_LIGHT};
+height: 44px;
 
-                                        border-radius: {DS.RADIUS_MD};
+background: {DS.PRIMARY_ULTRA_LIGHT};
 
-                                    '''):
+border: 1px solid {DS.BORDER_LIGHT};
 
-                                        ui.icon('bar_chart', size='22px').style(f'color: {DS.PRIMARY};')
+border-radius: {DS.RADIUS_MD};
 
-                                
+'''):
 
-                                    # Menu icon
+ui.icon('bar_chart', size='22px').style(f'color: {DS.PRIMARY};')
 
-                                    ui.icon('more_horiz', size='20px').style(f'''
 
-                                        color: {DS.TEXT_DISABLED};
+# Menu icon
 
-                                        transition: color {DS.TRANSITION_FAST};
+ui.icon('more_horiz', size='20px').style(f'''
 
-                                    ''')
+color: {DS.TEXT_DISABLED};
 
-                            
+transition: color {DS.TRANSITION_FAST};
 
-                                # Card Content
+''')
 
-                                with ui.column().style(f'''
 
-                                    gap: {DS.SPACING_SM};
+# Card Content
 
-                                    padding: 0 {DS.SPACING_XL} {DS.SPACING_XL} {DS.SPACING_XL};
+with ui.column().style(f'''
 
-                                '''):
+gap: {DS.SPACING_SM};
 
-                                    ui.label(dash.nome).classes('text-base').style(f'''
+padding: 0 {DS.SPACING_XL} {DS.SPACING_XL} {DS.SPACING_XL};
 
-                                        color: {DS.TEXT_PRIMARY};
+'''):
 
-                                        font-weight: 600;
+ui.label(dash.nome).classes('text-base').style(f'''
 
-                                        line-height: 1.4;
+color: {DS.TEXT_PRIMARY};
 
-                                        letter-spacing: -0.01em;
+font-weight: 600;
 
-                                    ''')
+line-height: 1.4;
 
-                                    ui.label(f'{dash.tipo.capitalize()} · Dashboard').classes('text-xs').style(f'''
+letter-spacing: -0.01em;
 
-                                        color: {DS.TEXT_TERTIARY};
+''')
 
-                                        font-weight: 500;
+ui.label(f'{dash.tipo.capitalize()} · Dashboard').classes('text-xs').style(f'''
 
-                                    ''')
+color: {DS.TEXT_TERTIARY};
 
-                            
+font-weight: 500;
 
-                                # Card Footer
+''')
 
-                                with ui.row().classes('w-full items-center justify-between').style(f'''
 
-                                    padding: {DS.SPACING_MD} {DS.SPACING_XL};
+# Card Footer
 
-                                    background: {DS.SURFACE_50};
+with ui.row().classes('w-full items-center justify-between').style(f'''
 
-                                    border-top: 1px solid {DS.BORDER_LIGHT};
+padding: {DS.SPACING_MD} {DS.SPACING_XL};
 
-                                '''):
+background: {DS.SURFACE_50};
 
-                                    ui.label('Abrir workspace').classes('text-xs').style(f'''
+border-top: 1px solid {DS.BORDER_LIGHT};
 
-                                        color: {DS.PRIMARY};
+'''):
 
-                                        font-weight: 600;
+ui.label('Abrir workspace').classes('text-xs').style(f'''
 
-                                    ''')
+color: {DS.PRIMARY};
 
-                                    ui.icon('arrow_forward', size='16px').style(f'color: {DS.PRIMARY};')
+font-weight: 600;
 
-                            
+''')
 
-                            # Card Interactions
+ui.icon('arrow_forward', size='16px').style(f'color: {DS.PRIMARY};')
 
-                            card.on('mouseenter', lambda e, c=card: c.style(f'''
 
-                                border-color: {DS.BORDER_HOVER};
+# Card Interactions
 
-                                transform: translateY(-2px);
+card.on('mouseenter', lambda e, c=card: c.style(f'''
 
-                                box-shadow: {DS.SHADOW_MD};
+border-color: {DS.BORDER_HOVER};
 
-                            '''))
+transform: translateY(-2px);
 
-                            card.on('mouseleave', lambda e, c=card: c.style(f'''
+box-shadow: {DS.SHADOW_MD};
 
-                                border-color: {DS.BORDER};
+'''))
 
-                                transform: translateY(0);
+card.on('mouseleave', lambda e, c=card: c.style(f'''
 
-                                box-shadow: {DS.SHADOW_SM};
+border-color: {DS.BORDER};
 
-                            '''))
+transform: translateY(0);
 
-                            card.on('click', lambda d=dash: ui.navigate.to(f'/dashboard/{d.id}'))
+box-shadow: {DS.SHADOW_SM};
 
-                else:
+'''))
 
-                    with ui.column().classes('w-full').style(f'padding: {DS.SPACING_3XL} 0;'):
+card.on('click', lambda d=dash: ui.navigate.to(f'/dashboard/{d.id}'))
 
-                        LayoutComponents.empty_state(
+else:
 
-                            icon='analytics',
+with ui.column().classes('w-full').style(f'padding: {DS.SPACING_3XL} 0;'):
 
-                            title='Nenhum workspace disponível',
+LayoutComponents.empty_state(
 
-                            description='Você ainda não tem workspaces atribuídos. Entre em contato com seu administrador.'
+icon='analytics',
 
-                        )
+title='Nenhum workspace disponível',
+
+description='Você ainda não tem workspaces atribuídos. Entre em contato com seu administrador.'
+
+)
 
 
 
@@ -1532,171 +1426,168 @@ def page_home():
 
 def page_dashboard(dash_id: int):
 
-    state = app.storage.user.get('state', AppState())
+state = app.storage.user.get('state', AppState())
 
-    if not state or not state.user_email: ui.navigate.to('/login'); return
+if not state or not state.user_email: ui.navigate.to('/login'); return
 
-    user = state.get_user_completo()
+user = state.get_user_completo()
 
-    if not user: ui.navigate.to('/login'); return
+if not user: ui.navigate.to('/login'); return
 
-    
 
-    db = SessionLocal()
+db = SessionLocal()
 
-    dash = db.query(Dashboard).filter(Dashboard.id == dash_id).first()
+dash = db.query(Dashboard).filter(Dashboard.id == dash_id).first()
 
-    cliente = db.query(Cliente).filter(Cliente.id == user.cliente_id).first()
+cliente = db.query(Cliente).filter(Cliente.id == user.cliente_id).first()
 
-    db.close()
+db.close()
 
-    
 
-    if not dash:
 
-        with ui.column().classes('w-full h-screen items-center justify-center'):
+if not dash:
 
-            LayoutComponents.empty_state(
+with ui.column().classes('w-full h-screen items-center justify-center'):
 
-                icon='error_outline',
+LayoutComponents.empty_state(
 
-                title='Workspace não encontrado',
+icon='error_outline',
 
-                description='O workspace solicitado não existe ou você não tem permissão para acessá-lo.'
+title='Workspace não encontrado',
 
-            )
+description='O workspace solicitado não existe ou você não tem permissão para acessá-lo.'
 
-        return
+)
 
-    
+return
 
-    with ui.column().classes('w-full h-screen').style(f'''
 
-        background: {DS.SURFACE_50};
 
-        margin: 0;
+with ui.column().classes('w-full h-screen').style(f'''
 
-        padding: 0;
+background: {DS.SURFACE_50};
 
-        overflow: hidden;
+margin: 0;
 
-    '''):
+padding: 0;
 
-        # Topbar Navigation com Breadcrumb
+overflow: hidden;
 
-        TopbarNavigation.create(
+'''):
 
-            cliente_nome=cliente.nome,
+# Topbar Navigation com Breadcrumb
 
-            user_email=user.email,
+TopbarNavigation.create(
 
-            current_page='dashboard',
+cliente_nome=cliente.nome,
 
-            breadcrumb=[
+user_email=user.email,
 
-                {'label': 'Workspaces', 'onClick': lambda: ui.navigate.to('/')},
+current_page='dashboard',
 
-                {'label': dash.nome}
+breadcrumb=[
 
-            ]
+{'label': 'Workspaces', 'onClick': lambda: ui.navigate.to('/')},
 
-        )
+{'label': dash.nome}
 
-        
+]
 
-        # Embed Container (com padding-top para compensar topbar fixa)
+)
 
-        content_area = ui.column().classes('w-full flex-grow relative').style(f'''
 
-            padding: 0;
 
-            margin: 0;
+# Embed Container (com padding-top para compensar topbar fixa)
 
-            overflow: hidden;
+content_area = ui.column().classes('w-full flex-grow relative').style(f'''
 
-            margin-top: 64px;
+padding: 0;
 
-        ''')
+margin: 0;
 
-        
+overflow: hidden;
 
-        with content_area:
+margin-top: 64px;
 
-            # Loading Skeleton
+''')
 
-            with ui.column().classes('w-full h-full absolute top-0 left-0 z-0 items-center justify-center').style(f'''
 
-                background: {DS.SURFACE};
+with content_area:
 
-                padding: {DS.SPACING_2XL};
+# Loading Skeleton
 
-            '''):
+with ui.column().classes('w-full h-full absolute top-0 left-0 z-0 items-center justify-center').style(f'''
 
-                with ui.column().classes('w-full h-full').style(f'''
+background: {DS.SURFACE};
 
-                    max-width: 1400px;
+padding: {DS.SPACING_2XL};
 
-                    margin: 0 auto;
+'''):
 
-                '''):
+with ui.column().classes('w-full h-full').style(f'''
 
-                    SkeletonLoader.create('100%')
+max-width: 1400px;
 
-            
+margin: 0 auto;
 
-            # Embed with Premium Wrapper
+'''):
 
-            ui.html(f'''
+SkeletonLoader.create('100%')
 
-                <div style="
 
-                    position: absolute;
+# Embed with Premium Wrapper
 
-                    top: {DS.SPACING_XL};
+ui.html(f'''
 
-                    left: {DS.SPACING_XL};
+<div style="
 
-                    right: {DS.SPACING_XL};
+position: absolute;
 
-                    bottom: {DS.SPACING_XL};
+top: {DS.SPACING_XL};
 
-                    z-index: 10;
+left: {DS.SPACING_XL};
 
-                    background: {DS.SURFACE_ELEVATED};
+right: {DS.SPACING_XL};
 
-                    border-radius: {DS.RADIUS_LG};
+bottom: {DS.SPACING_XL};
 
-                    border: 1px solid {DS.BORDER};
+z-index: 10;
 
-                    box-shadow: {DS.SHADOW_MD};
+background: {DS.SURFACE_ELEVATED};
 
-                    overflow: hidden;
+border-radius: {DS.RADIUS_LG};
 
-                ">
+border: 1px solid {DS.BORDER};
 
-                    <iframe
+box-shadow: {DS.SHADOW_MD};
 
-                        src="{dash.link_embed}"
+overflow: hidden;
 
-                        style="
+">
 
-                            width: 100%;
+<iframe
 
-                            height: 100%;
+src="{dash.link_embed}"
 
-                            border: none;
+style="
 
-                            background: transparent;
+width: 100%;
 
-                        "
+height: 100%;
 
-                        allowfullscreen>
+border: none;
 
-                    </iframe>
+background: transparent;
 
-                </div>
+"
 
-            ''', sanitize=False)
+allowfullscreen>
+
+</iframe>
+
+</div>
+
+''', sanitize=False)
 
 
 
@@ -1714,136 +1605,132 @@ Base.metadata.create_all(bind=engine)
 
 def inject_global_styles():
 
-    ui.add_head_html(f'''
+ui.add_head_html(f'''
 
-        <style>
+<style>
 
-            /* Global Reset */
+/* Global Reset */
 
-            * {{
+* {{
 
-                margin: 0;
+margin: 0;
 
-                padding: 0;
+padding: 0;
 
-                box-sizing: border-box;
+box-sizing: border-box;
 
-            }}
+}}
 
-            
 
-            /* Body */
+/* Body */
 
-            body {{
+body {{
 
-                font-family: {DS.FONT};
+font-family: {DS.FONT};
 
-                background: {DS.SURFACE_50};
+background: {DS.SURFACE_50};
 
-                -webkit-font-smoothing: antialiased;
+-webkit-font-smoothing: antialiased;
 
-                -moz-osx-font-smoothing: grayscale;
+-moz-osx-font-smoothing: grayscale;
 
-            }}
+}}
 
-            
 
-            /* Scrollbar */
+/* Scrollbar */
 
-            ::-webkit-scrollbar {{
+::-webkit-scrollbar {{
 
-                width: 8px;
+width: 8px;
 
-                height: 8px;
+height: 8px;
 
-            }}
+}}
 
-            ::-webkit-scrollbar-track {{
+::-webkit-scrollbar-track {{
 
-                background: transparent;
+background: transparent;
 
-            }}
+}}
 
-            ::-webkit-scrollbar-thumb {{
+::-webkit-scrollbar-thumb {{
 
-                background: {DS.BORDER};
+background: {DS.BORDER};
 
-                border-radius: {DS.RADIUS_SM};
+border-radius: {DS.RADIUS_SM};
 
-            }}
+}}
 
-            ::-webkit-scrollbar-thumb:hover {{
+::-webkit-scrollbar-thumb:hover {{
 
-                background: {DS.BORDER_HOVER};
+background: {DS.BORDER_HOVER};
 
-            }}
+}}
 
-            
 
-            /* Animations */
+/* Animations */
 
-            @keyframes fadeInUp {{
+@keyframes fadeInUp {{
 
-                from {{
+from {{
 
-                    opacity: 0;
+opacity: 0;
 
-                    transform: translateY(12px);
+transform: translateY(12px);
 
-                }}
+}}
 
-                to {{
+to {{
 
-                    opacity: 1;
+opacity: 1;
 
-                    transform: translateY(0);
+transform: translateY(0);
 
-                }}
+}}
 
-            }}
+}}
 
-            
 
-            @keyframes shimmer {{
+@keyframes shimmer {{
 
-                0% {{
+0% {{
 
-                    background-position: -200% 0;
+background-position: -200% 0;
 
-                }}
+}}
 
-                100% {{
+100% {{
 
-                    background-position: 200% 0;
+background-position: 200% 0;
 
-                }}
+}}
 
-            }}
+}}
 
-        </style>
+</style>
 
-    ''', shared=True)
+''', shared=True)
 
 
 
 if __name__ in {'__main__', '__mp_main__'}:
 
-    inject_global_styles()
+inject_global_styles()
 
-    port = int(os.environ.get('PORT', 8080))
+port = int(os.environ.get('PORT', 8080))
 
-    ui.run(
+ui.run(
 
-        title='CX Data',
+title='CX Data',
 
-        favicon='📊',
+favicon='📊',
 
-        host='0.0.0.0',
+host='0.0.0.0',
 
-        port=port,
+port=port,
 
-        storage_secret='cx_secure_key_v7',
+storage_secret='cx_secure_key_v7',
 
-        reload=False
+reload=False
 
-    )
+)
