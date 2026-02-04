@@ -1,7 +1,7 @@
 """
 CX Data - Enterprise Analytics Platform
 ============================================
-Versão 7.2: Polimento Visual (Login, Topbar Alinhada, Senha Visível)
+Versão 7.3: Fix de Deploy (Startup Assíncrono) + Polimento Visual
 """
 
 from nicegui import ui, app
@@ -44,7 +44,6 @@ class DS:
     
     FONT = '-apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
     
-    # Spacing
     SPACING_SM = '8px'
     SPACING_MD = '12px'
     SPACING_LG = '16px'
@@ -94,7 +93,6 @@ class LayoutComponents:
 class TopbarNavigation:
     @staticmethod
     def create(cliente_nome: str, user_email: str, current_page: str = 'home', breadcrumb: Optional[List[Dict]] = None):
-        """Topbar com alinhamento corrigido"""
         with ui.row().classes('w-full items-center justify-between').style(f'''
             padding: 0 {DS.SPACING_2XL}; 
             background: {DS.SURFACE}; 
@@ -108,10 +106,8 @@ class TopbarNavigation:
             backdrop-filter: blur(8px);
             background: rgba(255, 255, 255, 0.98);
         '''):
-            # Left: Branding + Breadcrumb (Alinhamento corrigido)
+            # Left: Branding + Breadcrumb
             with ui.row().classes('items-center').style(f'gap: {DS.SPACING_XL}; height: 100%;'):
-                
-                # Branding
                 branding = ui.row().classes('items-center cursor-pointer').style(f'gap: {DS.SPACING_MD};')
                 with branding:
                     with ui.column().classes('items-center justify-center').style(f'''
@@ -122,10 +118,8 @@ class TopbarNavigation:
                     ui.label('CX Data').classes('text-sm').style(f'color: {DS.TEXT_PRIMARY}; font-weight: 700; letter-spacing: -0.01em;')
                 branding.on('click', lambda: ui.navigate.to('/'))
                 
-                # Breadcrumb (Correção de posição vertical)
                 if breadcrumb:
                     ui.separator().classes('h-6').style(f'background: {DS.BORDER}; opacity: 0.5;')
-                    
                     with ui.row().classes('items-center').style(f'gap: {DS.SPACING_SM};'):
                         for i, item in enumerate(breadcrumb):
                             is_last = i == len(breadcrumb) - 1
@@ -134,50 +128,42 @@ class TopbarNavigation:
                                 font-weight: {600 if is_last else 500};
                                 transition: color {DS.TRANSITION_FAST};
                                 cursor: {"default" if is_last or 'onClick' not in item else "pointer"};
-                                line-height: 1; /* Fix vertical alignment */
+                                line-height: 1;
                             ''')
                             if 'onClick' in item and not is_last:
                                 label.on('click', item['onClick'])
                                 label.on('mouseenter', lambda e: e.sender.style(f'color: {DS.TEXT_PRIMARY};'))
                                 label.on('mouseleave', lambda e: e.sender.style(f'color: {DS.TEXT_SECONDARY};'))
-                            
                             if not is_last:
                                 ui.icon('chevron_right', size='16px').style(f'color: {DS.TEXT_DISABLED};')
             
-            # Right: User Menu (Alinhamento corrigido)
+            # Right: User Menu
             with ui.row().classes('items-center').style(f'gap: {DS.SPACING_MD}; height: 100%;'):
                 user_menu = ui.row().classes('items-center cursor-pointer').style(f'''
                     gap: {DS.SPACING_MD}; padding: {DS.SPACING_SM} {DS.SPACING_MD};
                     border-radius: {DS.RADIUS_MD}; transition: background {DS.TRANSITION_FAST};
                 ''')
-                
                 with user_menu:
-                    # Info (Alinhado à direita, mas centralizado verticalmente em relação ao ícone)
                     with ui.column().classes('items-end justify-center').style(f'gap: 2px;'):
                         ui.label(cliente_nome.split()[0]).classes('text-sm').style(f'color: {DS.TEXT_PRIMARY}; font-weight: 600; line-height: 1.2;')
                         ui.label(user_email).classes('text-xs').style(f'color: {DS.TEXT_TERTIARY}; line-height: 1.2;')
-                    
-                    # Avatar
                     iniciais = ''.join([palavra[0].upper() for palavra in cliente_nome.split()[:2]])
                     with ui.column().classes('items-center justify-center').style(f'''
                         width: 36px; height: 36px; background: {DS.PRIMARY_LIGHT}; border: 1.5px solid {DS.BORDER}; 
                         border-radius: {DS.RADIUS_FULL}; color: {DS.PRIMARY}; font-size: 12px; font-weight: 700;
                     '''):
                         ui.label(iniciais)
-                    
                     ui.icon('expand_more', size='18px').style(f'color: {DS.TEXT_TERTIARY};')
                 
                 user_menu.on('mouseenter', lambda e: e.sender.style(f'background: {DS.SURFACE_HOVER};'))
                 user_menu.on('mouseleave', lambda e: e.sender.style(f'background: transparent;'))
                 
-                # Menu Dropdown
                 with user_menu:
                     with ui.menu().props('offset-y').style(f'background: {DS.SURFACE_ELEVATED}; border: 1px solid {DS.BORDER}; border-radius: {DS.RADIUS_LG}; box-shadow: {DS.SHADOW_MD}; padding: {DS.SPACING_SM}; min-width: 200px;'):
                         def logout_action():
                             state = app.storage.user.get('state')
                             if state: state.logout(); app.storage.user['state'] = state
                             ui.navigate.to('/login')
-                        
                         logout_item = ui.row().classes('w-full items-center cursor-pointer').style(f'gap: {DS.SPACING_MD}; padding: {DS.SPACING_SM} {DS.SPACING_MD}; border-radius: {DS.RADIUS_MD}; transition: background {DS.TRANSITION_FAST};')
                         with logout_item:
                             ui.icon('logout', size='18px').style(f'color: {DS.TEXT_SECONDARY};')
@@ -193,15 +179,13 @@ class TopbarNavigation:
 class UIComponents:
     @staticmethod
     def input_field(label: str, password: bool = False, placeholder: str = '', icon: Optional[str] = None):
-        """Input field com toggle de senha e alinhamento corrigido"""
-        with ui.column().classes('w-full').style(f'gap: {DS.SPACING_SM}; align-items: stretch;'): # Ensure full width stretch
+        with ui.column().classes('w-full').style(f'gap: {DS.SPACING_SM}; align-items: stretch;'):
             ui.label(label).classes('text-sm').style(f'color: {DS.TEXT_SECONDARY}; font-weight: 500;')
-            
             with ui.row().classes('w-full items-center relative'):
                 if icon:
                     ui.icon(icon, size='18px').classes('absolute z-10').style(f'left: 14px; color: {DS.TEXT_TERTIARY}; pointer-events: none;')
                 
-                # ADICIONADO: password_toggle_button=password (Se for senha, mostra o olhinho)
+                # ADICIONADO: password_toggle_button=password
                 input_elem = ui.input(placeholder=placeholder, password=password, password_toggle_button=password).classes('w-full').props('outlined borderless').style(f'''
                     background: {DS.SURFACE}; 
                     border: 1.5px solid {DS.BORDER}; 
@@ -211,7 +195,6 @@ class UIComponents:
                     height: 44px;
                     font-size: 14px;
                 ''')
-                
                 input_elem.on('focus', lambda e: e.sender.style(f'border-color: {DS.BORDER_FOCUS}; box-shadow: {DS.SHADOW_FOCUS};'))
                 input_elem.on('blur', lambda e: e.sender.style(f'border-color: {DS.BORDER}; box-shadow: none;'))
                 return input_elem
@@ -344,7 +327,7 @@ def page_login():
                 ui.label('Acesse sua conta').classes('text-lg').style(f'color: {DS.TEXT_PRIMARY}; font-weight: 600; letter-spacing: -0.01em;')
                 
                 email = UIComponents.input_field('Email', icon='mail', placeholder='seu@email.com')
-                # CORRIGIDO: Campo de senha com toggle visual
+                # CORRIGIDO: Password toggle
                 senha = UIComponents.input_field('Senha', password=True, icon='lock', placeholder='••••••••')
                 
                 erro_label = ui.label('').classes('text-sm hidden').style(f'color: #dc2626;')
@@ -409,7 +392,7 @@ def page_home():
                             card.on('click', lambda d=dash: ui.navigate.to(f'/dashboard/{d.id}'))
                 else:
                     with ui.column().classes('w-full').style(f'padding: {DS.SPACING_3XL} 0;'):
-                        LayoutComponents.empty_state(icon='analytics', title='Nenhum workspace disponível', description='Você ainda não tem workspaces atribuídos.')
+                        LayoutComponents.empty_state(icon='analytics', title='Nenhum workspace disponível', description='Você ainda não tem workspaces atribuídos. Entre em contato com seu administrador.')
 
 @ui.page('/dashboard/{dash_id}')
 def page_dashboard(dash_id: int):
@@ -429,7 +412,6 @@ def page_dashboard(dash_id: int):
         return
 
     with ui.column().classes('w-full h-screen').style(f'background: {DS.SURFACE_50}; margin: 0; padding: 0; overflow: hidden;'):
-        # Topbar
         TopbarNavigation.create(
             cliente_nome=cliente.nome,
             user_email=user.email,
@@ -440,39 +422,23 @@ def page_dashboard(dash_id: int):
             ]
         )
 
-        # CORRIGIDO: Container principal do Dashboard
-        # Usa w-full h-full para preencher todo o espaço restante abaixo do menu
-        # O cálculo de altura é automático pelo flex-grow
-        content_area = ui.column().classes('w-full flex-grow relative').style(f'''
-            padding: 0; 
-            margin: 0; 
-            overflow: hidden;
-            margin-top: 64px; /* Altura exata da Topbar */
-            position: relative;
-        ''')
+        content_area = ui.column().classes('w-full flex-grow relative').style(f'padding: 0; margin: 0; overflow: hidden; margin-top: 64px;')
         
         with content_area:
-            # Loading Skeleton (Fica atrás)
             with ui.column().classes('w-full h-full absolute top-0 left-0 z-0 items-center justify-center').style(f'background: {DS.SURFACE};'):
                 with ui.column().classes('w-full h-full').style(f'max-width: 1400px; margin: 0 auto; padding: {DS.SPACING_2XL};'):
                     SkeletonLoader.create('100%')
             
-            # Embed Iframe (CORRIGIDO: Ocupa o container corretamente)
-            # Removemos os margins extras que causavam o desalinhamento visual
-            # Adicionamos um pequeno padding apenas para estética de "card flutuante"
+            # CORRIGIDO: Iframe Full Screen sem bordas extras
             ui.html(f'''
                 <div style="
                     position: absolute; 
-                    top: 16px; 
-                    left: 16px; 
-                    right: 16px; 
-                    bottom: 16px; 
+                    top: 0; 
+                    left: 0; 
+                    width: 100%; 
+                    height: 100%; 
                     z-index: 10;
-                    background: {DS.SURFACE_ELEVATED};
-                    border-radius: {DS.RADIUS_LG};
-                    border: 1px solid {DS.BORDER};
-                    box-shadow: {DS.SHADOW_MD};
-                    overflow: hidden;
+                    background: {DS.SURFACE};
                 ">
                     <iframe 
                         src="{dash.link_embed}" 
@@ -491,7 +457,12 @@ def page_dashboard(dash_id: int):
 # INITIALIZATION
 # ============================================================================
 
-Base.metadata.create_all(bind=engine)
+def init_db():
+    try:
+        Base.metadata.create_all(bind=engine)
+        print("DB Connected")
+    except:
+        print("DB Fail")
 
 def inject_global_styles():
     ui.add_head_html(f'''
@@ -508,6 +479,7 @@ def inject_global_styles():
     ''', shared=True)
 
 if __name__ in {'__main__', '__mp_main__'}:
+    app.on_startup(init_db)
     inject_global_styles()
     port = int(os.environ.get('PORT', 8080))
-    ui.run(title='CX Data', favicon='📊', host='0.0.0.0', port=port, storage_secret='cx_secure_key_v7', reload=False)
+    ui.run(title='CX Data', favicon='📊', host='0.0.0.0', port=port, storage_secret='cx_secure_key_v7', reload=False, show=False)
