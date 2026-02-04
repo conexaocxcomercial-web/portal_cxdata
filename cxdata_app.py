@@ -1,7 +1,7 @@
 """
 CX Data - Enterprise Analytics Platform
 ============================================
-Versão 7.3: Fix de Deploy (Startup Assíncrono) + Polimento Visual
+Versão 7.4: Fix Crítico (RADIUS_SM) + Inicialização Segura
 """
 
 from nicegui import ui, app
@@ -44,6 +44,7 @@ class DS:
     
     FONT = '-apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif'
     
+    # Spacing
     SPACING_SM = '8px'
     SPACING_MD = '12px'
     SPACING_LG = '16px'
@@ -51,6 +52,8 @@ class DS:
     SPACING_2XL = '32px'
     SPACING_3XL = '48px'
     
+    # Radius (CORRIGIDO: Adicionado RADIUS_SM)
+    RADIUS_SM = '4px'
     RADIUS_MD = '8px'
     RADIUS_LG = '12px'
     RADIUS_XL = '16px'
@@ -87,7 +90,7 @@ class LayoutComponents:
             ui.label(description).classes('text-sm text-center').style(f'color: {DS.TEXT_SECONDARY}; max-width: 360px; line-height: 1.5;')
 
 # ============================================================================
-# TOPBAR NAVIGATION (CORRIGIDO)
+# TOPBAR NAVIGATION
 # ============================================================================
 
 class TopbarNavigation:
@@ -173,7 +176,7 @@ class TopbarNavigation:
                         logout_item.on('mouseleave', lambda e: e.sender.style(f'background: transparent;'))
 
 # ============================================================================
-# UI COMPONENTS (CORRIGIDO)
+# UI COMPONENTS
 # ============================================================================
 
 class UIComponents:
@@ -185,7 +188,6 @@ class UIComponents:
                 if icon:
                     ui.icon(icon, size='18px').classes('absolute z-10').style(f'left: 14px; color: {DS.TEXT_TERTIARY}; pointer-events: none;')
                 
-                # ADICIONADO: password_toggle_button=password
                 input_elem = ui.input(placeholder=placeholder, password=password, password_toggle_button=password).classes('w-full').props('outlined borderless').style(f'''
                     background: {DS.SURFACE}; 
                     border: 1.5px solid {DS.BORDER}; 
@@ -327,7 +329,6 @@ def page_login():
                 ui.label('Acesse sua conta').classes('text-lg').style(f'color: {DS.TEXT_PRIMARY}; font-weight: 600; letter-spacing: -0.01em;')
                 
                 email = UIComponents.input_field('Email', icon='mail', placeholder='seu@email.com')
-                # CORRIGIDO: Password toggle
                 senha = UIComponents.input_field('Senha', password=True, icon='lock', placeholder='••••••••')
                 
                 erro_label = ui.label('').classes('text-sm hidden').style(f'color: #dc2626;')
@@ -429,7 +430,6 @@ def page_dashboard(dash_id: int):
                 with ui.column().classes('w-full h-full').style(f'max-width: 1400px; margin: 0 auto; padding: {DS.SPACING_2XL};'):
                     SkeletonLoader.create('100%')
             
-            # CORRIGIDO: Iframe Full Screen sem bordas extras
             ui.html(f'''
                 <div style="
                     position: absolute; 
