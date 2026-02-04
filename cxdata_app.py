@@ -1,7 +1,7 @@
 """
 CX Data - Enterprise Analytics Platform
 ============================================
-Versão 7.4: Fix Crítico (RADIUS_SM) + Inicialização Segura
+Versão 7.5: Fix Final de Atributos (BORDER_HOVER e RADIUS_SM adicionados)
 """
 
 from nicegui import ui, app
@@ -30,6 +30,7 @@ class DS:
     
     BORDER = '#dee2e6'
     BORDER_LIGHT = '#e9ecef'
+    BORDER_HOVER = '#adb5bd' # ADICIONADO: Correção do erro de atributo
     BORDER_FOCUS = '#0f62fe'
     
     TEXT_PRIMARY = '#212529'
@@ -52,8 +53,8 @@ class DS:
     SPACING_2XL = '32px'
     SPACING_3XL = '48px'
     
-    # Radius (CORRIGIDO: Adicionado RADIUS_SM)
-    RADIUS_SM = '4px'
+    # Radius
+    RADIUS_SM = '4px'    # ADICIONADO: Correção do erro de atributo
     RADIUS_MD = '8px'
     RADIUS_LG = '12px'
     RADIUS_XL = '16px'
