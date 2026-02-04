@@ -1,5 +1,3 @@
-o código retornada: 
-
 """
 CX Data - Enterprise Analytics Platform
 ============================================
